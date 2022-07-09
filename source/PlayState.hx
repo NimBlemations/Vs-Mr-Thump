@@ -145,7 +145,9 @@ class PlayState extends MusicBeatState
 
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
-
+	
+	// I could whip up a Stage.hx for this
+	
 	override public function create()
 	{
 

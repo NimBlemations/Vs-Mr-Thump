@@ -236,7 +236,7 @@ class AlphaCharacter extends FlxSprite
 {
 	public static var alphabet:String = "abcdefghijklmnopqrstuvwxyz";
 
-	public static var numbers:String = "1234567890";
+	public static var numbers:String = "1234567890"; // Speaking of numbers; where the hell are they?!
 
 	public static var symbols:String = "|~#$%()*+-:;<=>@[]^_.,'!?";
 

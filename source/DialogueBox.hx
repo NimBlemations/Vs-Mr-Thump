@@ -14,6 +14,8 @@ using StringTools;
 
 class DialogueBox extends FlxSpriteGroup
 {
+	// I am going to overhaul this
+	
 	var box:FlxSprite;
 
 	var curCharacter:String = '';
