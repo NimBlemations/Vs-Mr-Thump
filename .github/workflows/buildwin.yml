@@ -43,13 +43,13 @@ jobs:
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
-	  - name: Get malded nerd
-		run: |
-		  echo cry bitch
-		  echo get nerd'd
-		  echo lmao
-		  echo malder lmao
-		  echo lmaoooooooooooooooo
+      - name: Get malded nerd
+        run: |
+          echo cry bitch
+          echo get nerd'd
+          echo lmao
+          echo malder lmao
+          echo lmaoooooooooooooooo
         shell: cmd
       - name: Create APIStuff
         run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
