@@ -94,6 +94,8 @@ class PlayState extends MusicBeatState
 
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
+	
+	private var loadingBar:FlxBar;
 
 	private var generatedMusic:Bool = false;
 	private var startingSong:Bool = false;
@@ -157,7 +159,14 @@ class PlayState extends MusicBeatState
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-
+		
+		// LOADING INDICATOR
+		var loadingMeter = 0;
+		loadingBar = new FlxBar(24, 684, LEFT_TO_RIGHT, 1224, 12, this, "loadingMeter", 0, 100);
+		loadingBar.createFilledBar(FlxColor.TRANSPARENT, FlxColor.fromRGB(255, 22, 210));
+		loadingBar.scrollFactor.set();
+		add(loadingBar);
+		
 		sicks = 0;
 		bads = 0;
 		shits = 0;
@@ -180,6 +189,8 @@ class PlayState extends MusicBeatState
 
 		persistentUpdate = true;
 		persistentDraw = true;
+		
+		loadingMeter += 10;
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('tutorial');
@@ -213,6 +224,8 @@ class PlayState extends MusicBeatState
 			case 'thorns':
 				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
 		}
+		
+		loadingMeter += 10;
 		
 		switch (SONG.song.toLowerCase())
 		{
@@ -562,6 +575,8 @@ class PlayState extends MusicBeatState
 
 			add(stageCurtains);
 		}
+		
+		loadingMeter += 20;
 
 		var gfVersion:String = 'gf';
 
@@ -582,8 +597,12 @@ class PlayState extends MusicBeatState
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
+		
+		loadingMeter += 10;
 
 		dad = new Character(100, 100, SONG.player2);
+		
+		loadingMeter += 10;
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
@@ -628,6 +647,8 @@ class PlayState extends MusicBeatState
 
 		
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
+		
+		loadingMeter += 10;
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
@@ -673,6 +694,8 @@ class PlayState extends MusicBeatState
 
 		add(dad);
 		add(boyfriend);
+		
+		loadingMeter += 5;
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		// doof.x += 70;
@@ -681,13 +704,16 @@ class PlayState extends MusicBeatState
 		doof.finishThing = startCountdown;
 
 		Conductor.songPosition = -5000;
-
-
+		
+		loadingMeter += 5;
+		
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
 		if (FlxG.save.data.downscroll)
 			strumLine.y = FlxG.height - 165;
+		
+		loadingMeter += 5;
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
@@ -697,6 +723,8 @@ class PlayState extends MusicBeatState
 		// startCountdown();
 
 		generateSong(SONG.song);
+		
+		loadingMeter += 5;
 
 		// add(strumLine);
 
@@ -754,6 +782,8 @@ class PlayState extends MusicBeatState
 			{
 				add(replayTxt);
 			}
+		
+		loadingMeter += 10;
 
 		iconP1 = new HealthIcon(SONG.player1, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
@@ -777,6 +807,10 @@ class PlayState extends MusicBeatState
 		// UI_camera.zoom = 1;
 
 		// cameras = [FlxG.cameras.list[1]];
+		loadingMeter += 10;
+		
+		remove(loadingBar);
+		
 		startingSong = true;
 
 		if (isStoryMode)
@@ -2492,7 +2526,9 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		playStage.beatUpdate(curBeat);
+		
+		if (playStage != null)
+			playStage.beatUpdate(curBeat);
 
 		if (generatedMusic)
 		{
