@@ -105,7 +105,7 @@ class PlayState extends MusicBeatState
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
-	var halloweenBG:FlxSprite;
+	// var halloweenBG:FlxSprite;
 	var isHalloween:Bool = false;
 
 	var phillyCityLights:FlxTypedGroup<FlxSprite>;
@@ -129,7 +129,6 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
-
 	
 	public static var campaignScore:Int = 0;
 
@@ -146,7 +145,11 @@ class PlayState extends MusicBeatState
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 	
+	var playStage:Stage;
+	
 	// I could whip up a Stage.hx for this
+	
+	// I didn't actually realize the PlayState IS the playing state!
 	
 	override public function create()
 	{
@@ -160,7 +163,7 @@ class PlayState extends MusicBeatState
 		shits = 0;
 		goods = 0;
 
-		misses++;
+		// misses++; Kade, no
 
 		repPresses = 0;
 		repReleases = 0;
@@ -183,7 +186,7 @@ class PlayState extends MusicBeatState
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
-
+		
 		switch (SONG.song.toLowerCase())
 		{
 			case 'tutorial':
@@ -210,22 +213,32 @@ class PlayState extends MusicBeatState
 			case 'thorns':
 				dialogue = CoolUtil.coolTextFile(Paths.txt('thorns/thornsDialogue'));
 		}
+		
+		switch (SONG.song.toLowerCase())
+		{
+			case 'spookeez' | 'monster' | 'south':
+				curStage = "spooky";
+				halloweenLevel = true;
+			case 'pico' | 'blammed' | 'philly':
+				curStage = 'philly';
+			case 'milf' | 'satin-panties' | 'high':
+				curStage = 'limo';
+			case 'cocoa' | 'eggnog':
+				curStage = 'mall';
+			case 'winter-horrorland':
+				curStage = 'mallEvil';
+			case 'senpai' | 'roses':
+				curStage = 'school';
+			case 'thorns':
+				curStage = 'schoolEvil';
+		}
+		
+		// This is prob the point of Stage.hx
 
 		if (SONG.song.toLowerCase() == 'spookeez' || SONG.song.toLowerCase() == 'monster' || SONG.song.toLowerCase() == 'south')
 		{
-			curStage = "spooky";
-			halloweenLevel = true;
-
-			var hallowTex = Paths.getSparrowAtlas('halloween_bg');
-
-			halloweenBG = new FlxSprite(-200, -100);
-			halloweenBG.frames = hallowTex;
-			halloweenBG.animation.addByPrefix('idle', 'halloweem bg0');
-			halloweenBG.animation.addByPrefix('lightning', 'halloweem bg lightning strike', 24, false);
-			halloweenBG.animation.play('idle');
-			halloweenBG.antialiasing = true;
-			add(halloweenBG);
-
+			playStage = new Stage(curStage);
+			add(playStage);
 			isHalloween = true;
 		}
 		else if (SONG.song.toLowerCase() == 'pico' || SONG.song.toLowerCase() == 'blammed' || SONG.song.toLowerCase() == 'philly')
@@ -2458,7 +2471,8 @@ class PlayState extends MusicBeatState
 		trainFinishing = false;
 		startedMoving = false;
 	}
-
+	
+	/*
 	function lightningStrikeShit():Void
 	{
 		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
@@ -2470,6 +2484,7 @@ class PlayState extends MusicBeatState
 		boyfriend.playAnim('scared', true);
 		gf.playAnim('scared', true);
 	}
+	*/
 
 	override function stepHit()
 	{
@@ -2597,7 +2612,9 @@ class PlayState extends MusicBeatState
 
 		if (isHalloween && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
 		{
+			/*
 			lightningStrikeShit();
+			*/
 		}
 	}
 
