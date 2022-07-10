@@ -49,7 +49,25 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
           haxelib run lime build linux
-          
+      - name: Get malded nerd
+        run: |
+          echo cry bitch
+          echo get nerd'd
+          echo lmao
+          echo malder lmao
+          echo lmaoooooooooooooooo
+          echo fat L
+          echo fat LLLLLLLLLLLL
+          echo mald you cry baby
+          echo mald goes home
+          echo lmaoooooooooooooooooooooooooooooooooooooooooooooo
+          echo malding fr rn
+          echo you crazy?
+          echo maldin ass mf
+          echo lmaoooooooooooooo
+          echo look what the bitch detector picked up
+          echo fuckin crybaby bitch
+          echo Ok, I'm sorry, I just wanted to run this in a workflow lmao.
       - uses: actions/upload-artifact@v2
         with:
           name: linuxBuild

@@ -46,6 +46,13 @@ jobs:
           haxelib list
       - name: Create APIStuff
         run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
+      - name: Oh for fuck sake
+        run : |
+          echo mac is going to take it's sweet fuckin almost 20 minutes
+          echo fuckin mac
+          echo i hate mac, it take soooooooo long
+          echo overheats too, i think
+          echo apple is a bad money taker
       - name: Compile
         run: haxelib run lime build mac 
       - name: Publish Artifact

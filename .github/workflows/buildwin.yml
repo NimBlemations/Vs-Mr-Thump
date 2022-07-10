@@ -50,6 +50,18 @@ jobs:
           echo lmao
           echo malder lmao
           echo lmaoooooooooooooooo
+          echo fat L
+          echo fat LLLLLLLLLLLL
+          echo mald you cry baby
+          echo mald goes home
+          echo lmaoooooooooooooooooooooooooooooooooooooooooooooo
+          echo malding fr rn
+          echo you crazy?
+          echo maldin ass mf
+          echo lmaoooooooooooooo
+          echo look what the bitch detector picked up
+          echo fuckin crybaby bitch
+          echo Ok, I'm sorry, I just wanted to run this in a workflow lmao.
         shell: cmd
       - name: Create APIStuff
         run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
