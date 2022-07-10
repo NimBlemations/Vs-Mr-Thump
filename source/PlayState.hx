@@ -156,7 +156,7 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 
-		theFunne = FlxG.save.data.newInput;
+		theFunne = FlxG.save.data.ghostTapping;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
@@ -229,6 +229,8 @@ class PlayState extends MusicBeatState
 		
 		switch (SONG.song.toLowerCase())
 		{
+			case 'bopeebo' | 'fresh' | 'dadbattle':
+				curStage = 'stage';
 			case 'spookeez' | 'monster' | 'south':
 				curStage = "spooky";
 				halloweenLevel = true;
@@ -248,15 +250,14 @@ class PlayState extends MusicBeatState
 		
 		// This is prob the point of Stage.hx
 
-		if (SONG.song.toLowerCase() == 'spookeez' || SONG.song.toLowerCase() == 'monster' || SONG.song.toLowerCase() == 'south')
+		if (curStage == 'spooky')
 		{
 			playStage = new Stage(curStage);
 			add(playStage);
 			isHalloween = true;
 		}
-		else if (SONG.song.toLowerCase() == 'pico' || SONG.song.toLowerCase() == 'blammed' || SONG.song.toLowerCase() == 'philly')
+		else if (curStage == 'philly')
 		{
-			curStage = 'philly';
 
 			var bg:FlxSprite = new FlxSprite(-100).loadGraphic(Paths.image('philly/sky'));
 			bg.scrollFactor.set(0.1, 0.1);
@@ -296,9 +297,8 @@ class PlayState extends MusicBeatState
 			var street:FlxSprite = new FlxSprite(-40, streetBehind.y).loadGraphic(Paths.image('philly/street'));
 			add(street);
 		}
-		else if (SONG.song.toLowerCase() == 'milf' || SONG.song.toLowerCase() == 'satin-panties' || SONG.song.toLowerCase() == 'high')
+		else if (curStage == 'limo')
 		{
-			curStage = 'limo';
 			defaultCamZoom = 0.90;
 
 			var skyBG:FlxSprite = new FlxSprite(-120, -50).loadGraphic(Paths.image('limo/limoSunset'));
@@ -343,7 +343,7 @@ class PlayState extends MusicBeatState
 			fastCar = new FlxSprite(-300, 160).loadGraphic(Paths.image('limo/fastCarLol'));
 			// add(limo);
 		}
-		else if (SONG.song.toLowerCase() == 'cocoa' || SONG.song.toLowerCase() == 'eggnog')
+		else if (curStage == 'mall')
 		{
 			curStage = 'mall';
 
@@ -399,9 +399,8 @@ class PlayState extends MusicBeatState
 			santa.antialiasing = true;
 			add(santa);
 		}
-		else if (SONG.song.toLowerCase() == 'winter-horrorland')
+		else if (curStage == 'mallEvil')
 		{
-			curStage = 'mallEvil';
 			var bg:FlxSprite = new FlxSprite(-400, -500).loadGraphic(Paths.image('christmas/evilBG'));
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.2, 0.2);
@@ -419,9 +418,8 @@ class PlayState extends MusicBeatState
 			evilSnow.antialiasing = true;
 			add(evilSnow);
 		}
-		else if (SONG.song.toLowerCase() == 'senpai' || SONG.song.toLowerCase() == 'roses')
+		else if (curStage == 'school')
 		{
-			curStage = 'school';
 
 			// defaultCamZoom = 0.9;
 
@@ -486,9 +484,8 @@ class PlayState extends MusicBeatState
 			bgGirls.updateHitbox();
 			add(bgGirls);
 		}
-		else if (SONG.song.toLowerCase() == 'thorns')
+		else if (curStage == 'schoolEvil')
 		{
-			curStage = 'schoolEvil';
 
 			var waveEffectBG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 3, 2);
 			var waveEffectFG = new FlxWaveEffect(FlxWaveMode.ALL, 2, -1, 5, 2);
@@ -551,7 +548,6 @@ class PlayState extends MusicBeatState
 		else
 		{
 			defaultCamZoom = 0.9;
-			curStage = 'stage';
 			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
 			bg.antialiasing = true;
 			bg.scrollFactor.set(0.9, 0.9);
@@ -1691,7 +1687,7 @@ class PlayState extends MusicBeatState
 						{
 							health -= 0.075;
 							vocals.volume = 0;
-							if (theFunne)
+							if (!theFunne)
 								noteMiss(daNote.noteData);
 						}
 	
@@ -2359,8 +2355,6 @@ class PlayState extends MusicBeatState
 			{
 				if (keyP)
 					goodNoteHit(note);
-				else if (!theFunne) 
-					badNoteCheck();
 				else if (rep.replay.keyPresses.length > repPresses && !keyP)
 				{
 					if (NearlyEquals(note.strumTime,rep.replay.keyPresses[repPresses].time, 4))
@@ -2375,10 +2369,6 @@ class PlayState extends MusicBeatState
 				{
 				goodNoteHit(note);
 				}
-			else if (!theFunne)
-			{
-				badNoteCheck();
-			}
 		}
 
 		function goodNoteHit(note:Note):Void
