@@ -40,4 +40,26 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		}
 	}
 	
+	var lightningStrikeBeat:Int = 0;
+	var lightningOffset:Int = 8;
+	
+	public function beatUpdate(curBeat:Int)
+	{
+		switch (curStage)
+		{
+			case 'spooky':
+				if (FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
+				{
+					FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
+					halloweenBG.animation.play('lightning');
+					
+					lightningStrikeBeat = curBeat;
+					lightningOffset = FlxG.random.int(8, 24);
+					
+					PlayState.boyfriend.playAnim('scared', true);
+					PlayState.gf.playAnim('scared', true);
+				}
+		}
+	}
+	
 }

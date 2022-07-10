@@ -66,6 +66,11 @@ class Main extends Sprite
 		#if !debug
 		initialState = TitleState;
 		#end
+		
+		// Because it no work on more frames
+		#if html5
+		framerate = 60;
+		#end
 
 		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
 

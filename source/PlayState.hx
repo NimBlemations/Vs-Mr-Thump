@@ -62,9 +62,9 @@ class PlayState extends MusicBeatState
 
 	private var vocals:FlxSound;
 
-	private var dad:Character;
-	private var gf:Character;
-	private var boyfriend:Boyfriend;
+	public static var dad:Character;
+	public static var gf:Character;
+	public static var boyfriend:Boyfriend;
 
 	private var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -2471,20 +2471,6 @@ class PlayState extends MusicBeatState
 		trainFinishing = false;
 		startedMoving = false;
 	}
-	
-	/*
-	function lightningStrikeShit():Void
-	{
-		FlxG.sound.play(Paths.soundRandom('thunder_', 1, 2));
-		halloweenBG.animation.play('lightning');
-
-		lightningStrikeBeat = curBeat;
-		lightningOffset = FlxG.random.int(8, 24);
-
-		boyfriend.playAnim('scared', true);
-		gf.playAnim('scared', true);
-	}
-	*/
 
 	override function stepHit()
 	{
@@ -2506,6 +2492,7 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+		playStage.beatUpdate(curBeat);
 
 		if (generatedMusic)
 		{
@@ -2608,13 +2595,6 @@ class PlayState extends MusicBeatState
 					trainCooldown = FlxG.random.int(-4, 0);
 					trainStart();
 				}
-		}
-
-		if (isHalloween && FlxG.random.bool(10) && curBeat > lightningStrikeBeat + lightningOffset)
-		{
-			/*
-			lightningStrikeShit();
-			*/
 		}
 	}
 

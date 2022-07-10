@@ -36,6 +36,8 @@ class LoadingState extends MusicBeatState
 	
 	override function create()
 	{
+		trace('LOADIN HAUL!');
+		
 		logo = new FlxSprite(-150, -100);
 		logo.frames = Paths.getSparrowAtlas('logoBumpin');
 		logo.antialiasing = true;
