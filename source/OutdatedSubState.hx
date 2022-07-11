@@ -42,6 +42,28 @@ class OutdatedSubState extends MusicBeatState
 		}
 		if (controls.BACK)
 		{
+			var randomNumeral:Int = Std.random(5);
+			var txtInsert:String = '';
+			// This is a weird spot lmao
+			switch (randomNumeral)
+			{
+				case 0:
+					txtInsert = 'BEES! OH GOD THE BEES!';
+				case 1:
+					txtInsert = 'Joe';
+				case 2:
+					txtInsert = "like i'm gonna change engines lmao";
+				case 3:
+					txtInsert = 'thump thump thump thump';
+				case 4:
+					txtInsert = 'an owl is impersonating someone in this room';
+				case 5:
+					txtInsert = 'mcdonlad brugr';
+			}
+			var txt:FlxText = new FlxText(0, 0, FlxG.width, txtInsert, 32);
+			txt.setFormat("VCR OSD Mono", 32, FlxColor.GREEN, CENTER);
+			txt.screenCenter();
+			add(txt);
 			leftState = true;
 			FlxG.switchState(new MainMenuState());
 		}
