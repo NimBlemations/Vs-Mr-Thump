@@ -13,14 +13,17 @@ class HealthIcon extends FlxSprite
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
+		// Tbh shout out to Forever Engine
 		characterTxt = char;
 		switch (characterTxt)
 		{
+			case 'mom-car':
+				characterTxt = 'mom';
 			case 'parents-christmas':
 				characterTxt = 'parents';
 			case 'monster-christmas':
 				characterTxt = 'monster';
-			case 'bf-christmas':
+			case 'bf-christmas' | 'bf-car':
 				characterTxt = 'bf';
 			case 'gf-christmas':
 				characterTxt = 'gf';
