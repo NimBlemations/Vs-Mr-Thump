@@ -30,6 +30,8 @@ class HealthIcon extends FlxSprite
 		}
 		super();
 		loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
+		if (this.frames == null)
+			loadGraphic(Paths.image('icons/icon-face'), true, 150, 150);
 
 		antialiasing = true;
 		animation.add(characterTxt, [0, 1], 0, false, isPlayer);
