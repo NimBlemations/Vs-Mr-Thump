@@ -49,9 +49,9 @@ jobs:
       - name: Oh for fuck sake
         run : |
           echo mac is going to take it's sweet fuckin almost 20 minutes
-          echo fuckin mac
-          echo i hate mac, it take soooooooo long
-          echo overheats too, i think
+          echo ugh
+          echo it take soooooooo long
+          echo the mac overheats too, i think
           echo apple is a bad money taker
       - name: Compile
         run: haxelib run lime build mac 

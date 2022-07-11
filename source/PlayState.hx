@@ -173,6 +173,7 @@ class PlayState extends MusicBeatState
 		bads = 0;
 		shits = 0;
 		goods = 0;
+		misses = 0;
 
 		// misses++; Kade, no
 

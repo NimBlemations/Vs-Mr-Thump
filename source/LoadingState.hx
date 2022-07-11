@@ -38,7 +38,7 @@ class LoadingState extends MusicBeatState
 	override function create()
 	{
 		loadingTxt = new FlxText(FlxG.width / 2, FlxG.height / 2, 'Loading...', 32);
-		loadingTxt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		loadingTxt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.GRAY);
 		loadingTxt.screenCenter();
 		add(loadingTxt);
 		
