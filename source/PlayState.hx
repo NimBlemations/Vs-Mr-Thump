@@ -139,6 +139,7 @@ class PlayState extends MusicBeatState
 	public static var daPixelZoom:Float = 6;
 
 	public static var theFunne:Bool = true;
+	public static var lightCpuStrums:Bool = false;
 	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
 	public static var repPresses:Int = 0;
@@ -157,6 +158,7 @@ class PlayState extends MusicBeatState
 	{
 
 		theFunne = FlxG.save.data.ghostTapping;
+		lightCpuStrums = FlxG.save.data.lightCpuStrums;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
@@ -1656,6 +1658,27 @@ class PlayState extends MusicBeatState
 							case 0:
 								dad.playAnim('singLEFT' + altAnim, true);
 						}
+						
+						if (lightCpuStrums) {
+							strumLineNotes.forEach(function(spr:FlxSprite) {
+								var opponentUI:Bool = true;
+								playerStrums.forEach(function(plySpr:FlxSprite) {
+									if (plySpr == spr) {
+										opponentUI = false;
+									}
+								});
+								if (opponentUI) {
+									if (Math.abs(daNote.noteData) == spr.ID)
+									{
+										spr.animation.play('confirm', true);
+										new FlxTimer().start(0.2, function(tmr:FlxTimer) {
+											if (spr.animation.curAnim.name != 'static')
+												spr.animation.play('static', true);
+										});
+									}
+								}
+							});
+						}
 	
 						dad.holdTimer = 0;
 	
@@ -1687,7 +1710,7 @@ class PlayState extends MusicBeatState
 						{
 							health -= 0.075;
 							vocals.volume = 0;
-							if (!theFunne)
+							if (theFunne)
 								noteMiss(daNote.noteData);
 						}
 	

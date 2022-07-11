@@ -24,6 +24,9 @@ class OptionsMenu extends MusicBeatState
 	var versionShit:FlxText;
 	override function create()
 	{
+		if (FlxG.save.data.lightCpuStrums == null)
+			FlxG.save.data.lightCpuStrums = false;
+		
 		if (FlxG.save.data.ghostTapping == null)
 			FlxG.save.data.ghostTapping = true;
 
@@ -34,7 +37,7 @@ class OptionsMenu extends MusicBeatState
 			FlxG.save.data.dfjk = false;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.ghostTapping ? "Ghost tapping" : "No Ghost Tapping") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + "\nLoad replays");
+		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.ghostTapping ? "Ghost tapping" : "No Ghost Tapping") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + '\n' + (FlxG.save.data.lightCpuStrums ? 'Light Cpu Strums' : 'Static Cpu Strums') + "\nLoad replays");
 		
 		trace(controlsStrings);
 
@@ -92,7 +95,7 @@ class OptionsMenu extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (curSelected != 3)
+				if (curSelected != 4)
 					grpControls.remove(grpControls.members[curSelected]);
 				switch(curSelected)
 				{
@@ -120,6 +123,12 @@ class OptionsMenu extends MusicBeatState
 						ctrl.targetY = curSelected - 2;
 						grpControls.add(ctrl);
 					case 3:
+						FlxG.save.data.lightCpuStrums = !FlxG.save.data.lightCpuStrums;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.lightCpuStrums ? 'Light Cpu Strums' : 'Static Cpu Strums'), true, false);
+						ctrl.isMenuItem = true;
+						ctrl.targetY = curSelected - 3;
+						grpControls.add(ctrl);
+					case 4:
 						trace('switch');
 						FlxG.switchState(new LoadReplayState());
 				}
