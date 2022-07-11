@@ -186,9 +186,9 @@ class PlayState extends MusicBeatState
 		camHUD.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
-		FlxG.cameras.add(camHUD);
+		FlxG.cameras.add(camHUD, false);
 
-		FlxCamera.defaultCameras = [camGame];
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -1769,7 +1769,9 @@ class PlayState extends MusicBeatState
 
 				if (SONG.validScore)
 				{
+					#if (!switch && newgrounds)
 					NGio.unlockMedal(60961);
+					#end
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 				}
 
@@ -2177,13 +2179,16 @@ class PlayState extends MusicBeatState
 					{	
 						if (loadRep)
 						{
-							if (NearlyEquals(daNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
+							if (rep.replay.keyPresses[repPresses] != null)
 							{
-								goodNoteHit(daNote);
-								trace('force note hit');
+								if (NearlyEquals(daNote.strumTime,rep.replay.keyPresses[repPresses].time, 30))
+								{
+									goodNoteHit(daNote);
+									trace('force note hit');
+								}
+								else
+									noteCheck(controlArray[daNote.noteData], daNote);
 							}
-							else
-								noteCheck(controlArray[daNote.noteData], daNote);
 						}
 						else
 							noteCheck(controlArray[daNote.noteData], daNote);

@@ -20,7 +20,9 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+#if newgrounds
 import io.newgrounds.NG;
+#end
 import lime.app.Application;
 import openfl.Assets;
 
@@ -263,7 +265,7 @@ class TitleState extends MusicBeatState
 
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
-			#if !switch
+			#if (!switch && newgrounds)
 			NGio.unlockMedal(60960);
 
 			// If it's Friday according to da clock
@@ -352,14 +354,17 @@ class TitleState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+		
+		if (gfDance != null && logoBl != null)
+		{
+			logoBl.animation.play('bump');
+			danceLeft = !danceLeft;
 
-		logoBl.animation.play('bump');
-		danceLeft = !danceLeft;
-
-		if (danceLeft)
-			gfDance.animation.play('danceRight');
-		else
-			gfDance.animation.play('danceLeft');
+			if (danceLeft)
+				gfDance.animation.play('danceRight');
+			else
+				gfDance.animation.play('danceLeft');
+		}
 
 		FlxG.log.add(curBeat);
 
