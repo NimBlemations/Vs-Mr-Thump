@@ -17,23 +17,14 @@ class HealthIcon extends FlxSprite
 	{
 		// Tbh shout out to Forever Engine
 		characterTxt = char;
-		switch (characterTxt)
-		{
-			case 'mom-car':
-				characterTxt = 'mom';
-			case 'parents-christmas':
-				characterTxt = 'parents';
-			case 'monster-christmas':
-				characterTxt = 'monster';
-			case 'bf-christmas' | 'bf-car':
-				characterTxt = 'bf';
-			case 'gf-christmas':
-				characterTxt = 'gf';
-			case 'senpai-angry':
-				characterTxt = 'senpai';
-		}
 		super();
 		loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
+		if (this.frames == null)
+		{
+			var splitter:Array<String> = characterTxt.split('-');
+			characterTxt = splitter[0];
+			loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
+		}
 		if (this.frames == null)
 			loadGraphic(Paths.image('icons/icon-face'), true, 150, 150);
 
