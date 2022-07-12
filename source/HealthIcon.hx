@@ -10,6 +10,8 @@ class HealthIcon extends FlxSprite
 	public var sprTracker:FlxSprite;
 	
 	public var characterTxt:String = 'bf';
+	
+	public var composition:Int = 0; // Either the defeat icon and the idle icon, or more!
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
@@ -27,6 +29,8 @@ class HealthIcon extends FlxSprite
 				characterTxt = 'bf';
 			case 'gf-christmas':
 				characterTxt = 'gf';
+			case 'senpai-angry':
+				characterTxt = 'senpai';
 		}
 		super();
 		loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
