@@ -1697,7 +1697,8 @@ class PlayState extends MusicBeatState
 						var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 						if (noteDiff < Conductor.safeZoneOffset * 0.25)
 						{
-							trace('absolute banger');
+							if (!daNote.isSustainNote)
+								trace('absolute banger');
 							goodNoteHit(daNote);
 						}
 					}
