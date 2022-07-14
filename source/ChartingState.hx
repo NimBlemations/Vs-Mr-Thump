@@ -325,6 +325,7 @@ class ChartingState extends MusicBeatState
 	}
 
 	var stepperSusLength:FlxUINumericStepper;
+	var check_botNote:FlxUICheckBox;
 
 	function addNoteUI():Void
 	{
@@ -334,10 +335,14 @@ class ChartingState extends MusicBeatState
 		stepperSusLength = new FlxUINumericStepper(10, 10, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * 16);
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
+		
+		check_botNote = new FlxUICheckBox(10, 30, null, null, "Bot Note?", 100);
+		check_botNote.name = 'note_botNote';
 
 		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
 
 		tab_group_note.add(stepperSusLength);
+		tab_group_note.add(check_botNote);
 		tab_group_note.add(applyLength);
 
 		UI_box.addGroup(tab_group_note);
@@ -407,6 +412,8 @@ class ChartingState extends MusicBeatState
 					FlxG.log.add('changed bpm shit');
 				case "Alt Animation":
 					_song.notes[curSection].altAnim = check.checked;
+				case 'Bot Note?':
+					curSelectedNote[3] = check.checked;
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -414,30 +421,24 @@ class ChartingState extends MusicBeatState
 			var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
 			FlxG.log.add(wname);
-			if (wname == 'section_length')
+			// Switchified lmao
+			switch (wname)
 			{
-				_song.notes[curSection].lengthInSteps = Std.int(nums.value);
-				updateGrid();
-			}
-			else if (wname == 'song_speed')
-			{
-				_song.speed = nums.value;
-			}
-			else if (wname == 'song_bpm')
-			{
-				tempBpm = Std.int(nums.value);
-				Conductor.mapBPMChanges(_song);
-				Conductor.changeBPM(Std.int(nums.value));
-			}
-			else if (wname == 'note_susLength')
-			{
-				curSelectedNote[2] = nums.value;
-				updateGrid();
-			}
-			else if (wname == 'section_bpm')
-			{
-				_song.notes[curSection].bpm = Std.int(nums.value);
-				updateGrid();
+				case 'section_length':
+					_song.notes[curSection].lengthInSteps = Std.int(nums.value);
+					updateGrid();
+				case 'song_speed':
+					_song.speed = nums.value;
+				case 'song_bpm':
+					tempBpm = Std.int(nums.value);
+					Conductor.mapBPMChanges(_song);
+					Conductor.changeBPM(Std.int(nums.value));
+				case 'note_susLength':
+					curSelectedNote[2] = nums.value;
+					updateGrid();
+				case 'section_bpm':
+					_song.notes[curSection].bpm = Std.int(nums.value);
+					updateGrid();
 			}
 		}
 
@@ -806,7 +807,10 @@ class ChartingState extends MusicBeatState
 	function updateNoteUI():Void
 	{
 		if (curSelectedNote != null)
+		{
 			stepperSusLength.value = curSelectedNote[2];
+			check_botNote = curSelectedNote[3];
+		}
 	}
 
 	function updateGrid():Void
@@ -897,7 +901,7 @@ class ChartingState extends MusicBeatState
 
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
+			if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
 			{
 				curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
 			}

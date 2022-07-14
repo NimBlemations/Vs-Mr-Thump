@@ -22,6 +22,7 @@ class Note extends FlxSprite
 	public var prevNote:Note;
 
 	public var sustainLength:Float = 0;
+	public var isBotNote:Bool = false;
 	public var isSustainNote:Bool = false;
 
 	public var noteScore:Float = 1;
@@ -32,7 +33,7 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?botNote:Bool = false)
 	{
 		super();
 
@@ -41,6 +42,7 @@ class Note extends FlxSprite
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
+		isBotNote = botNote;
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
