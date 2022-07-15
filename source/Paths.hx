@@ -69,6 +69,11 @@ class Paths
 	{
 		return getPath('data/$key.json', TEXT, library);
 	}
+	
+	inline static public function fragShader(key:String)
+	{
+		return 'shaders/$key.frag';
+	}
 
 	static public function sound(key:String, ?library:String)
 	{

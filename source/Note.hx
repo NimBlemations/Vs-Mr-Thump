@@ -7,6 +7,7 @@ import flixel.util.FlxColor;
 #if polymod
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
+import ShaderBox.GloomShader;
 
 using StringTools;
 
@@ -102,6 +103,11 @@ class Note extends FlxSprite
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
 				antialiasing = true;
+		}
+		
+		if (isBotNote)
+		{
+			shader = new GloomShader(true, 0.0, 1.0, 0.0);
 		}
 
 		switch (noteData)

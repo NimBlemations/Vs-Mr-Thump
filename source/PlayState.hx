@@ -3,6 +3,7 @@ package;
 import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
+import ShaderBox; // My BOX!!!!
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -600,6 +601,9 @@ class PlayState extends MusicBeatState
 		loadingMeter += 10;
 
 		dad = new Character(100, 100, SONG.player2);
+		
+		if (SONG.song.toLowerCase() == 'horde')
+			dad.shader = new GloomShader(true, 0.1, 1.0, 0.1);
 		
 		loadingMeter += 10;
 
@@ -1655,11 +1659,17 @@ class PlayState extends MusicBeatState
 							case 2:
 								dad.playAnim('singUP' + altAnim, true);
 							case 3:
-								dad.playAnim('singRIGHT' + altAnim, true);
+								if (dad.animation.getByName('singFRONT') != null) // Trying new setup of characters
+									dad.playAnim('singFRONT' + altAnim, true);
+								else
+									dad.playAnim('singRIGHT' + altAnim, true);
 							case 1:
 								dad.playAnim('singDOWN' + altAnim, true);
 							case 0:
-								dad.playAnim('singLEFT' + altAnim, true);
+								if (dad.animation.getByName('singBACK') != null)
+									dad.playAnim('singBACK' + altAnim, true);
+								else
+									dad.playAnim('singLEFT' + altAnim, true);
 						}
 						
 						if (lightCpuStrums) {
@@ -2347,13 +2357,19 @@ class PlayState extends MusicBeatState
 			switch (direction)
 			{
 				case 0:
-					boyfriend.playAnim('singLEFTmiss', true);
+					if (boyfriend.animation.getByName('singFRONTmiss') != null)
+						boyfriend.playAnim('singFRONTmiss', true);
+					else
+						boyfriend.playAnim('singLEFTmiss', true);
 				case 1:
 					boyfriend.playAnim('singDOWNmiss', true);
 				case 2:
 					boyfriend.playAnim('singUPmiss', true);
 				case 3:
-					boyfriend.playAnim('singRIGHTmiss', true);
+					if (boyfriend.animation.getByName('singBACKmiss') != null)
+						boyfriend.playAnim('singBACKmiss', true);
+					else
+						boyfriend.playAnim('singRIGHTmiss', true);
 			}
 		}
 	}
@@ -2415,7 +2431,7 @@ class PlayState extends MusicBeatState
 			{
 				if (!note.wasGoodHit)
 				{
-					if (!note.isSustainNote)
+					if (!note.isSustainNote && !note.isBotNote)
 					{
 						popUpScore(note.strumTime);
 						combo += 1;
@@ -2433,11 +2449,17 @@ class PlayState extends MusicBeatState
 						case 2:
 							boyfriend.playAnim('singUP', true);
 						case 3:
-							boyfriend.playAnim('singRIGHT', true);
+							if (boyfriend.animation.getByName('singBACK') != null) // Tryin a new kinda thing so you don't have to flip shit
+								boyfriend.playAnim('singBACK', true);
+							else
+								boyfriend.playAnim('singRIGHT', true);
 						case 1:
 							boyfriend.playAnim('singDOWN', true);
 						case 0:
-							boyfriend.playAnim('singLEFT', true);
+							if (boyfriend.animation.getByName('singFRONT') != null)
+								boyfriend.playAnim('singFRONT', true);
+							else
+								boyfriend.playAnim('singLEFT', true);
 					}
 		
 					playerStrums.forEach(function(spr:FlxSprite)
