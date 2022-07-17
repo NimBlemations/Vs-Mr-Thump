@@ -21,14 +21,16 @@ class LoadingState extends MusicBeatState
 {
 	inline static var MIN_TIME = 1.0;
 	
-	var target:FlxState;
+	// Was changing the FlxStates to MusicBeatStates a good idea?
+	
+	var target:MusicBeatState;
 	var stopMusic = false;
 	var callbacks:MultiCallback;
 	
 	var loadingTxt:FlxText;
 	var danceLeft = false;
 	
-	function new(target:FlxState, stopMusic:Bool)
+	function new(target:MusicBeatState, stopMusic:Bool)
 	{
 		super();
 		this.target = target;
@@ -57,6 +59,7 @@ class LoadingState extends MusicBeatState
 				else
 					checkLibrary("tutorial");
 				
+				loadingTxt.text = 'Loaded!';
 				var fadeTime = 0.5;
 				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());
@@ -75,7 +78,7 @@ class LoadingState extends MusicBeatState
 			// @:privateAccess
 			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_) { callback(); });
+			Assets.loadSound(path).onComplete(function (_) { callback(); loadingTxt.text = 'Loaded sound...'; });
 		}
 	}
 	
@@ -125,12 +128,13 @@ class LoadingState extends MusicBeatState
 		return Paths.voices(PlayState.SONG.song);
 	}
 	
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false)
+	inline static public function loadAndSwitchState(target:MusicBeatState, stopMusic = false)
 	{
 		FlxG.switchState(getNextState(target, stopMusic));
+		MasterObjectLoader.resetAssets();
 	}
 	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState
+	static function getNextState(target:MusicBeatState, stopMusic = false):MusicBeatState
 	{
 		Paths.setCurrentLevel("week" + PlayState.storyWeek);
 		#if NO_PRELOAD_ALL

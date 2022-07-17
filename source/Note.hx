@@ -107,7 +107,7 @@ class Note extends FlxSprite
 		
 		if (isBotNote)
 		{
-			shader = new GloomShader(true, 0.0, 1.0, 0.0);
+			shader = new GloomShader(true, 1.0, 0.0, 0.0);
 		}
 
 		switch (noteData)

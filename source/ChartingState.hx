@@ -414,6 +414,7 @@ class ChartingState extends MusicBeatState
 					_song.notes[curSection].altAnim = check.checked;
 				case 'Bot Note?':
 					curSelectedNote[3] = check.checked;
+					updateGrid(); // Have to due to shader
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -792,15 +793,18 @@ class ChartingState extends MusicBeatState
 
 	function updateHeads():Void
 	{
+		leftIcon.animation.play('bf');
+		rightIcon.animation.play('dad');
+		
 		if (check_mustHitSection.checked)
 		{
-			leftIcon.animation.play('bf');
-			rightIcon.animation.play('dad');
+			leftIcon.setPosition(0, -100);
+			rightIcon.setPosition(gridBG.width / 2, -100);
 		}
 		else
 		{
-			leftIcon.animation.play('dad');
-			rightIcon.animation.play('bf');
+			leftIcon.setPosition(gridBG.width / 2, -100);
+			rightIcon.setPosition(0, -100);
 		}
 	}
 

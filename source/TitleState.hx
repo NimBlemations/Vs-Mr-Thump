@@ -1,5 +1,6 @@
 package;
 
+import sys.thread.Mutex;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -44,6 +45,7 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		MasterObjectLoader.mutex = new Mutex();
 		#if polymod
 		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
@@ -87,9 +89,9 @@ class TitleState extends MusicBeatState
 		}
 
 		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
+		switchState(new FreeplayState());
 		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
+		switchState(new ChartingState());
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -294,17 +296,17 @@ class TitleState extends MusicBeatState
 					{
 						trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
 						OutdatedSubState.needVer = data;
-						FlxG.switchState(new OutdatedSubState());
+						switchState(new OutdatedSubState());
 					}
 					else
 					{
-						FlxG.switchState(new MainMenuState());
+						switchState(new MainMenuState());
 					}
 				}
 				
 				http.onError = function (error) {
 				  trace('error: $error');
-				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
+				  switchState(new MainMenuState()); // fail but we go anyway
 				}
 				
 				http.request();

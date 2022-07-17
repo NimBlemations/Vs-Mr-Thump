@@ -38,7 +38,7 @@ class OutdatedSubState extends MusicBeatState
 			txt.screenCenter();
 			add(txt);
 			leftState = true;
-			FlxG.switchState(new MainMenuState());
+			switchState(new MainMenuState());
 		}
 		if (controls.BACK)
 		{
@@ -65,7 +65,7 @@ class OutdatedSubState extends MusicBeatState
 			txt.screenCenter();
 			add(txt);
 			leftState = true;
-			FlxG.switchState(new MainMenuState());
+			switchState(new MainMenuState());
 		}
 		super.update(elapsed);
 	}

@@ -44,6 +44,8 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	public static var instance:PlayState = null;
+	
 	public static var curStage:String = '';
 	public static var SONG:SwagSong;
 	public static var isStoryMode:Bool = false;
@@ -155,9 +157,17 @@ class PlayState extends MusicBeatState
 	
 	// I didn't actually realize the PlayState IS the playing state!
 	
+	override public function load()
+	{
+		trace('HOG RIDAAAAAAAA');
+		
+		super.load();
+	}
+	
 	override public function create()
 	{
-
+		
+		instance = this;
 		theFunne = FlxG.save.data.ghostTapping;
 		lightCpuStrums = FlxG.save.data.lightCpuStrums;
 		if (FlxG.sound.music != null)
@@ -603,7 +613,9 @@ class PlayState extends MusicBeatState
 		dad = new Character(100, 100, SONG.player2);
 		
 		if (SONG.song.toLowerCase() == 'horde')
-			dad.shader = new GloomShader(true, 0.1, 1.0, 0.1);
+		{
+			dad.shader = new GloomShader(true, 49 / 255, 175 / 255, 209 / 255); // Color cyen (Insert VS. Hex reference)
+		}
 		
 		loadingMeter += 10;
 
@@ -1402,7 +1414,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.random.bool(0.1))
 			{
 				// gitaroo man easter egg
-				FlxG.switchState(new GitarooPause());
+				switchState(new GitarooPause());
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1410,7 +1422,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			FlxG.switchState(new ChartingState());
+			switchState(new ChartingState());
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -1707,8 +1719,7 @@ class PlayState extends MusicBeatState
 						var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 						if (noteDiff < Conductor.safeZoneOffset * 0.25)
 						{
-							if (!daNote.isSustainNote)
-								trace('absolute banger');
+							// absolute banger
 							goodNoteHit(daNote);
 						}
 					}
@@ -1784,7 +1795,7 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				FlxG.switchState(new StoryMenuState());
+				switchState(new StoryMenuState());
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -1837,7 +1848,7 @@ class PlayState extends MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
-			FlxG.switchState(new FreeplayState());
+			switchState(new FreeplayState());
 		}
 	}
 
