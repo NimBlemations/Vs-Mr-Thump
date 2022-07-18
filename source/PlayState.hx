@@ -633,7 +633,6 @@ class PlayState extends MusicBeatState
 			add(stageCurtains);
 		}
 		
-		// Prob has to be here due to things not happening when not added, huh.
 		add(gf);
 
 		// Shitty layering but whatev it works LOL
