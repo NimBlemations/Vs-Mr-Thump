@@ -6,6 +6,7 @@ import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import flixel.text.FlxText;
@@ -23,6 +24,10 @@ class LoadingState extends MusicBeatState
 	
 	// Was changing the FlxStates to MusicBeatStates a good idea?
 	
+	var loadingBar:FlxBar;
+	var localMeter = 0;
+	public static var loadingMeter = 0;
+	
 	var target:MusicBeatState;
 	var stopMusic = false;
 	var callbacks:MultiCallback;
@@ -32,6 +37,7 @@ class LoadingState extends MusicBeatState
 	
 	function new(target:MusicBeatState, stopMusic:Bool)
 	{
+		trace('burgr');
 		super();
 		this.target = target;
 		this.stopMusic = stopMusic;
@@ -39,10 +45,17 @@ class LoadingState extends MusicBeatState
 	
 	override function create()
 	{
+		
 		loadingTxt = new FlxText(FlxG.width / 2, FlxG.height / 2, 'Loading...', 32);
 		loadingTxt.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.GRAY);
 		loadingTxt.screenCenter();
 		add(loadingTxt);
+		
+		// LOADING INDICATOR
+		loadingBar = new FlxBar(24, 684, LEFT_TO_RIGHT, 1224, 12, this, "localMeter", 0, 100);
+		loadingBar.createFilledBar(FlxColor.TRANSPARENT, FlxColor.fromRGB(255, 22, 210));
+		loadingBar.scrollFactor.set();
+		add(loadingBar);
 		
 		initSongsManifest().onComplete
 		(
@@ -103,6 +116,7 @@ class LoadingState extends MusicBeatState
 	
 	override function update(elapsed:Float)
 	{
+		localMeter = loadingMeter;
 		super.update(elapsed);
 		#if debug
 		if (FlxG.keys.justPressed.SPACE)
@@ -131,7 +145,6 @@ class LoadingState extends MusicBeatState
 	inline static public function loadAndSwitchState(target:MusicBeatState, stopMusic = false)
 	{
 		FlxG.switchState(getNextState(target, stopMusic));
-		MasterObjectLoader.resetAssets();
 	}
 	
 	static function getNextState(target:MusicBeatState, stopMusic = false):MusicBeatState

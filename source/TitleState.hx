@@ -305,8 +305,8 @@ class TitleState extends MusicBeatState
 				}
 				
 				http.onError = function (error) {
-				  trace('error: $error');
-				  switchState(new MainMenuState()); // fail but we go anyway
+					trace('error: $error');
+					switchState(new MainMenuState()); // fail but we go anyway
 				}
 				
 				http.request();

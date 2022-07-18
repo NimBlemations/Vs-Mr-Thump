@@ -5,15 +5,17 @@ import flixel.addons.ui.FlxUI;
 import flixel.FlxBasic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import lime.app.Application;
-import openfl.system.System;
 
 class MusicBeatState extends FlxUIState
 {
+	public static var lastState:FlxState;
+	
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 	
@@ -43,14 +45,16 @@ class MusicBeatState extends FlxUIState
 	
 	// Stole from Kade Engine 1.8 lmao
 	
+	/*
 	override function destroy()
 	{
-		/*
+		
 		Application.current.window.onFocusIn.remove(onWindowFocusOut);
 		Application.current.window.onFocusIn.remove(onWindowFocusIn);
-		*/
+		
 		super.destroy();
 	}
+	*/
 	
 	override function remove(Object:flixel.FlxBasic, Splice:Bool = false):flixel.FlxBasic
 	{
@@ -80,7 +84,7 @@ class MusicBeatState extends FlxUIState
 		return result;
 	}
 	
-	public function switchState(nextState:MusicBeatState, ?trans:Bool = true)
+	public function switchState(nextState:MusicBeatState, goToLoading:Bool = true, trans:Bool = true)
 	{
 		if (preventNoob)
 			return;
@@ -90,21 +94,39 @@ class MusicBeatState extends FlxUIState
 		{
 			transitionOut(function()
 			{
-				MasterObjectLoader.resetAssets();
-				
-				@:privateAccess
-				FlxG.game._requestedState = nextState;
+				lastState = this;
+				if (goToLoading)
+				{
+					var state:FlxState = new LoadingBar(nextState);
+					
+					@:privateAccess
+					FlxG.game._requestedState = state;
+				}
+				else
+				{
+					@:privateAccess
+					FlxG.game._requestedState = nextState;
+				}
+				trace('SWITCHED STATE!');
 			});
 		}
 		else
 		{
-			MasterObjectLoader.resetAssets();
-			
-			@:privateAccess
-			FlxG.game._requestedState = nextState;
+			lastState = this;
+			if (goToLoading)
+			{
+				var state:FlxState = new LoadingBar(nextState);
+				
+				@:privateAccess
+				FlxG.game._requestedState = state;
+			}
+			else
+			{
+				@:privateAccess
+				FlxG.game._requestedState = nextState;
+			}
+			trace('SWITCHED STATE!');
 		}
-		trace('SWITCHED STATE!');
-		System.gc(); // Just in case lol
 	}
 	
 	var loadedCompletely:Bool = false;
@@ -118,6 +140,8 @@ class MusicBeatState extends FlxUIState
 
 	override function update(elapsed:Float)
 	{
+		if (preventNoob)
+			return;
 		//everyStep();
 		var oldStep:Int = curStep;
 

@@ -12,7 +12,14 @@ class OutdatedSubState extends MusicBeatState
 	public static var leftState:Bool = false;
 
 	public static var needVer:String = "IDFK LOL";
-
+	
+	override function load()
+	{
+		trace('bruh lmao');
+		
+		super.load();
+	}
+	
 	override function create()
 	{
 		super.create();
@@ -56,7 +63,7 @@ class OutdatedSubState extends MusicBeatState
 				case 3:
 					txtInsert = 'thump thump thump thump';
 				case 4:
-					txtInsert = 'an owl is impersonating someone in this room';
+					txtInsert = 'hoodini';
 				case 5:
 					txtInsert = 'mcdonlad brugr';
 			}

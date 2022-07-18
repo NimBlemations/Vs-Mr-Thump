@@ -38,6 +38,13 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+	
+	override function load()
+	{
+		trace('OMEGA BALLS');
+		
+		super.load();
+	}
 
 	override function create()
 	{

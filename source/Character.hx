@@ -539,45 +539,53 @@ class Character extends FlxSprite
 		}
 		else if (curCharacter.startsWith('bf'))
 		{
-			var oldRight = animation.getByName('singRIGHT').frames;
-			animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-			animation.getByName('singLEFT').frames = oldRight;
-
-			// IF THEY HAVE MISS ANIMATIONS??
-			if (animation.getByName('singRIGHTmiss') != null)
+			try
 			{
-				var oldMiss = animation.getByName('singRIGHTmiss').frames;
-				animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-				animation.getByName('singLEFTmiss').frames = oldMiss;
+				var oldRight = animation.getByName('singRIGHT').frames;
+				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
+				animation.getByName('singLEFT').frames = oldRight;
+
+				// IF THEY HAVE MISS ANIMATIONS??
+				if (animation.getByName('singRIGHTmiss') != null)
+				{
+					var oldMiss = animation.getByName('singRIGHTmiss').frames;
+					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
+					animation.getByName('singLEFTmiss').frames = oldMiss;
+				}
+			} catch (e) {
+				trace('FUCKING HELL!!! ' + e);
 			}
 		}
 	}
 
 	override function update(elapsed:Float)
 	{
-		if (!curCharacter.startsWith('bf'))
+		if (curCharacter != null)
 		{
-			if (animation.curAnim.name.startsWith('sing'))
+			if (!curCharacter.startsWith('bf'))
 			{
-				holdTimer += elapsed;
+				if (animation.curAnim.name.startsWith('sing'))
+				{
+					holdTimer += elapsed;
+				}
+
+				var dadVar:Float = 4;
+
+				if (curCharacter == 'dad')
+					dadVar = 6.1;
+				if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+				{
+					dance();
+					holdTimer = 0;
+				}
 			}
 
-			var dadVar:Float = 4;
-
-			if (curCharacter == 'dad')
-				dadVar = 6.1;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+			switch (curCharacter)
 			{
-				dance();
-				holdTimer = 0;
+				case 'gf':
+					if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+						playAnim('danceRight');
 			}
-		}
-
-		switch (curCharacter)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
 		}
 
 		super.update(elapsed);
@@ -655,30 +663,33 @@ class Character extends FlxSprite
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		animation.play(AnimName, Force, Reversed, Frame);
-
-		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
+		if (frames != null) // I hate crashing for fuck sake
 		{
-			offset.set(daOffset[0], daOffset[1]);
-		}
-		else
-			offset.set(0, 0);
+			animation.play(AnimName, Force, Reversed, Frame);
 
-		if (curCharacter == 'gf')
-		{
-			if (AnimName == 'singLEFT')
+			var daOffset = animOffsets.get(AnimName);
+			if (animOffsets.exists(AnimName))
 			{
-				danced = true;
+				offset.set(daOffset[0], daOffset[1]);
 			}
-			else if (AnimName == 'singRIGHT')
-			{
-				danced = false;
-			}
+			else
+				offset.set(0, 0);
 
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
+			if (curCharacter == 'gf')
 			{
-				danced = !danced;
+				if (AnimName == 'singLEFT')
+				{
+					danced = true;
+				}
+				else if (AnimName == 'singRIGHT')
+				{
+					danced = false;
+				}
+
+				if (AnimName == 'singUP' || AnimName == 'singDOWN')
+				{
+					danced = !danced;
+				}
 			}
 		}
 	}
