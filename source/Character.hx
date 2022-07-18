@@ -271,12 +271,12 @@ class Character extends FlxSprite
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
+				animation.addByPrefix('singFRONT', 'BF NOTE LEFT0', 24, false); // LEFT
+				animation.addByPrefix('singBACK', 'BF NOTE RIGHT0', 24, false); // RIGHT
 				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
 				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
+				animation.addByPrefix('singFRONTmiss', 'BF NOTE LEFT MISS', 24, false); // LEFT
+				animation.addByPrefix('singBACKmiss', 'BF NOTE RIGHT MISS', 24, false); // RIGHT
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 
@@ -524,22 +524,25 @@ class Character extends FlxSprite
 			if (!curCharacter.startsWith('bf'))
 			{
 				// var animArray
-				var oldRight = animation.getByName('singRIGHT').frames;
-				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-				animation.getByName('singLEFT').frames = oldRight;
-
-				// IF THEY HAVE MISS ANIMATIONS??
-				if (animation.getByName('singRIGHTmiss') != null)
+				if (animation.getByName('singRIGHT') != null)
 				{
-					var oldMiss = animation.getByName('singRIGHTmiss').frames;
-					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-					animation.getByName('singLEFTmiss').frames = oldMiss;
+					var oldRight = animation.getByName('singRIGHT').frames;
+					animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
+					animation.getByName('singLEFT').frames = oldRight;
+
+					// IF THEY HAVE MISS ANIMATIONS??
+					if (animation.getByName('singRIGHTmiss') != null)
+					{
+						var oldMiss = animation.getByName('singRIGHTmiss').frames;
+						animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
+						animation.getByName('singLEFTmiss').frames = oldMiss;
+					}
 				}
 			}
 		}
 		else if (curCharacter.startsWith('bf'))
 		{
-			try
+			if (animation.getByName('singRIGHT') != null)
 			{
 				var oldRight = animation.getByName('singRIGHT').frames;
 				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
@@ -552,8 +555,6 @@ class Character extends FlxSprite
 					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
 					animation.getByName('singLEFTmiss').frames = oldMiss;
 				}
-			} catch (e) {
-				trace('FUCKING HELL!!! ' + e);
 			}
 		}
 	}
@@ -600,96 +601,90 @@ class Character extends FlxSprite
 	{
 		if (!debugMode)
 		{
-			if (this.frames != null) // Fuckin hell, what do I have to do to not crash?!?!?!
+			switch (curCharacter)
 			{
-				switch (curCharacter)
-				{
-					case 'gf':
-						if (!animation.curAnim.name.startsWith('hair'))
-						{
-							danced = !danced;
-
-							if (danced)
-								playAnim('danceRight');
-							else
-								playAnim('danceLeft');
-						}
-
-					case 'gf-christmas':
-						if (!animation.curAnim.name.startsWith('hair'))
-						{
-							danced = !danced;
-
-							if (danced)
-								playAnim('danceRight');
-							else
-								playAnim('danceLeft');
-						}
-
-					case 'gf-car':
-						if (!animation.curAnim.name.startsWith('hair'))
-						{
-							danced = !danced;
-
-							if (danced)
-								playAnim('danceRight');
-							else
-								playAnim('danceLeft');
-						}
-					case 'gf-pixel':
-						if (!animation.curAnim.name.startsWith('hair'))
-						{
-							danced = !danced;
-
-							if (danced)
-								playAnim('danceRight');
-							else
-								playAnim('danceLeft');
-						}
-
-					case 'spooky':
+				case 'gf':
+					if (!animation.curAnim.name.startsWith('hair'))
+					{
 						danced = !danced;
 
 						if (danced)
 							playAnim('danceRight');
 						else
 							playAnim('danceLeft');
-					default:
-						playAnim('idle');
-				}
+					}
+
+				case 'gf-christmas':
+					if (!animation.curAnim.name.startsWith('hair'))
+					{
+						danced = !danced;
+
+						if (danced)
+							playAnim('danceRight');
+						else
+							playAnim('danceLeft');
+					}
+
+				case 'gf-car':
+					if (!animation.curAnim.name.startsWith('hair'))
+					{
+						danced = !danced;
+
+						if (danced)
+							playAnim('danceRight');
+						else
+							playAnim('danceLeft');
+					}
+				case 'gf-pixel':
+					if (!animation.curAnim.name.startsWith('hair'))
+					{
+						danced = !danced;
+
+						if (danced)
+							playAnim('danceRight');
+						else
+							playAnim('danceLeft');
+					}
+
+				case 'spooky':
+					danced = !danced;
+
+					if (danced)
+						playAnim('danceRight');
+					else
+						playAnim('danceLeft');
+				default:
+					playAnim('idle');
 			}
 		}
 	}
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (frames != null) // I hate crashing for fuck sake
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = animOffsets.get(AnimName);
+		if (animOffsets.exists(AnimName))
 		{
-			animation.play(AnimName, Force, Reversed, Frame);
+			offset.set(daOffset[0], daOffset[1]);
+		}
+		else
+			offset.set(0, 0);
 
-			var daOffset = animOffsets.get(AnimName);
-			if (animOffsets.exists(AnimName))
+		if (curCharacter == 'gf')
+		{
+			if (AnimName == 'singLEFT')
 			{
-				offset.set(daOffset[0], daOffset[1]);
+				danced = true;
 			}
-			else
-				offset.set(0, 0);
-
-			if (curCharacter == 'gf')
+			else if (AnimName == 'singRIGHT')
 			{
-				if (AnimName == 'singLEFT')
-				{
-					danced = true;
-				}
-				else if (AnimName == 'singRIGHT')
-				{
-					danced = false;
-				}
+				danced = false;
+			}
 
-				if (AnimName == 'singUP' || AnimName == 'singDOWN')
-				{
-					danced = !danced;
-				}
+			if (AnimName == 'singUP' || AnimName == 'singDOWN')
+			{
+				danced = !danced;
 			}
 		}
 	}
