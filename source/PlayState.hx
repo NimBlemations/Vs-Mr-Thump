@@ -154,7 +154,7 @@ class PlayState extends MusicBeatState
 	
 	// I didn't actually realize the PlayState IS the playing state!
 	
-	override public function load()
+	override public function load() // This makes me want to revert my changes to this shit
 	{
 		trace('HOG RIDAAAAAAAA');
 		
