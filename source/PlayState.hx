@@ -94,6 +94,7 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
+
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 
@@ -154,76 +155,9 @@ class PlayState extends MusicBeatState
 	
 	// I didn't actually realize the PlayState IS the playing state!
 	
-	override public function load() // This makes me want to revert my changes to this shit
+	override public function load()
 	{
 		trace('HOG RIDAAAAAAAA');
-		
-		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
-		
-		Conductor.mapBPMChanges(SONG);
-		Conductor.changeBPM(SONG.bpm);
-		
-		LoadingBar.progress += 20;
-		
-		boyfriend = new Boyfriend(770, 450, SONG.player1);
-		
-		if (boyfriend.frames == null || boyfriend == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load boyfriend: " + SONG.player1 + ". Loading default boyfriend"]);
-			#end
-			boyfriend = new Boyfriend(770, 450, 'bf');
-		}
-		
-		LoadingBar.progress += 20;
-		
-		var gfVersion:String = 'gf';
-
-		switch (curStage)
-		{
-			case 'limo':
-				gfVersion = 'gf-car';
-			case 'mall' | 'mallEvil':
-				gfVersion = 'gf-christmas';
-			case 'school':
-				gfVersion = 'gf-pixel';
-			case 'schoolEvil':
-				gfVersion = 'gf-pixel';
-		}
-		
-		LoadingBar.progress += 20;
-
-		gf = new Character(400, 130, gfVersion);
-		
-		if (gf.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load gf: " + gfVersion + ". Loading default gf"]);
-			#end
-			gf = new Character(400, 130, 'gf');
-		}
-		
-		gf.scrollFactor.set(0.95, 0.95);
-		
-		LoadingBar.progress += 20;
-
-		dad = new Character(100, 100, SONG.player2);
-		
-		if (dad.frames == null)
-		{
-			#if debug
-			FlxG.log.warn(["Couldn't load opponent: " + SONG.player2 + ". Loading default opponent"]);
-			#end
-			dad = new Character(100, 100, 'dad');
-		}
-		
-		if (SONG.song.toLowerCase() == 'horde')
-		{
-			dad.shader = new GloomShader(true, 49 / 255, 175 / 255, 209 / 255); // Color cyen (Insert VS. Hex reference)
-		}
-		
-		LoadingBar.progress += 20;
 		
 		super.load();
 	}
@@ -260,6 +194,12 @@ class PlayState extends MusicBeatState
 
 		persistentUpdate = true;
 		persistentDraw = true;
+
+		if (SONG == null)
+			SONG = Song.loadFromJson('tutorial');
+
+		Conductor.mapBPMChanges(SONG);
+		Conductor.changeBPM(SONG.bpm);
 		
 		switch (SONG.song.toLowerCase())
 		{
@@ -632,15 +572,33 @@ class PlayState extends MusicBeatState
 
 			add(stageCurtains);
 		}
-		
-		add(gf);
 
-		// Shitty layering but whatev it works LOL
+		var gfVersion:String = 'gf';
+
+		switch (curStage)
+		{
+			case 'limo':
+				gfVersion = 'gf-car';
+			case 'mall' | 'mallEvil':
+				gfVersion = 'gf-christmas';
+			case 'school':
+				gfVersion = 'gf-pixel';
+			case 'schoolEvil':
+				gfVersion = 'gf-pixel';
+		}
+
 		if (curStage == 'limo')
-			add(limo);
+			gfVersion = 'gf-car';
 
-		add(dad);
-		add(boyfriend);
+		gf = new Character(400, 130, gfVersion);
+		gf.scrollFactor.set(0.95, 0.95);
+
+		dad = new Character(100, 100, SONG.player2);
+		
+		if (SONG.song.toLowerCase() == 'horde')
+		{
+			dad.shader = new GloomShader(true, 49 / 255, 175 / 255, 209 / 255); // Color cyen (Insert VS. Hex reference)
+		}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
@@ -682,6 +640,10 @@ class PlayState extends MusicBeatState
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 		}
 
+
+		
+		boyfriend = new Boyfriend(770, 450, SONG.player1);
+
 		// REPOSITIONING PER STAGE
 		switch (curStage)
 		{
@@ -717,6 +679,15 @@ class PlayState extends MusicBeatState
 				gf.x += 180;
 				gf.y += 300;
 		}
+
+		add(gf);
+
+		// Shitty layering but whatev it works LOL
+		if (curStage == 'limo')
+			add(limo);
+
+		add(dad);
+		add(boyfriend);
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		// doof.x += 70;
