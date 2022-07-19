@@ -72,15 +72,19 @@ class FranceShader extends FlxShader // le france houhouhouhou!
 
 class AveragedShader extends FlxShader
 {
-	@glFragmentSource('
+	@:glFragmentSource('
 		#pragma header
 		
 		void main() {
 			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-			float average = ((color.r + color.g + color.b) / 3) * 255;
+			float average = ((color.r + color.g + color.b) / 3)/* * 255 */;
 			gl_FragColor = vec4(average, average, average, color.a);
+		}')
+		
+		public function new()
+		{
+			super();
 		}
-	')
 }
 
 class BrokenGlassShader extends FlxShader

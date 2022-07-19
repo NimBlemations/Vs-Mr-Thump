@@ -643,9 +643,9 @@ class PlayState extends MusicBeatState
 		
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
 		
-		if (SONG.song.toLowerCase() == 'horde') // french lmao
+		if (SONG.song.toLowerCase() == 'horde')
 		{
-			boyfriend.shader = new FranceShader();
+			boyfriend.shader = new AveragedShader();
 		}
 
 		// REPOSITIONING PER STAGE
@@ -1739,6 +1739,9 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		if (vocals == null)
+			return;
+		
 		if (!loadRep)
 			rep.SaveReplay();
 
