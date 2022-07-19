@@ -45,6 +45,44 @@ class GloomShader extends FlxShader
 		}
 }
 
+class FranceShader extends FlxShader // le france houhouhouhou!
+{
+	@:glFragmentSource('
+		#pragma header
+		
+		const float multip = 6.0;
+		
+		void main() {
+			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
+			if (openfl_TextureCoordv.x < 1.0 / 3)
+				gl_FragColor = vec4(color.r / multip, color.g / multip, color.b * multip, color.a);
+			else if (openfl_TextureCoordv.x < (1.0 / 3) * 2)
+				gl_FragColor = vec4(color.r * multip, color.g * multip, color.b * multip, color.a);
+			else if (openfl_TextureCoordv.x > (1.0 / 3) * 2)
+				gl_FragColor = vec4(color.r * multip, color.g / multip, color.b / multip, color.a);
+			else
+				gl_FragColor = color;
+		}')
+		
+		public function new()
+		{
+			super();
+		}
+}
+
+class AveragedShader extends FlxShader
+{
+	@glFragmentSource('
+		#pragma header
+		
+		void main() {
+			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
+			float average = ((color.r + color.g + color.b) / 3) * 255;
+			gl_FragColor = vec4(average, average, average, color.a);
+		}
+	')
+}
+
 class BrokenGlassShader extends FlxShader
 {
 	@:glFragmentSource('

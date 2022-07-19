@@ -158,6 +158,7 @@ class PlayState extends MusicBeatState
 	override public function load()
 	{
 		trace('HOG RIDAAAAAAAA');
+		LoadingBar.progress += 100;
 		
 		super.load();
 	}
@@ -639,10 +640,13 @@ class PlayState extends MusicBeatState
 				dad.y += 100;
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 		}
-
-
 		
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
+		
+		if (SONG.song.toLowerCase() == 'horde') // french lmao
+		{
+			boyfriend.shader = new FranceShader();
+		}
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
