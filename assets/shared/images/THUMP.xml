@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="THUMP.png"><SubTexture name="THUMP idle0000" x="972" y="1014" width="528" height="454" frameX="-463" frameY="-445" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP idle0001" x="463" y="1014" width="509" height="459" frameX="-467" frameY="-440" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP idle0002" x="801" y="542" width="496" height="469" frameX="-476" frameY="-430" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP idle0003" x="866" y="0" width="469" height="476" frameX="-483" frameY="-423" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP idle0004" x="866" y="0" width="469" height="476" frameX="-483" frameY="-423" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP idle0005" x="866" y="0" width="469" height="476" frameX="-483" frameY="-423" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP LEFT0000" x="398" y="542" width="403" height="471" frameX="-827" frameY="-446" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP LEFT0001" x="0" y="542" width="398" height="472" frameX="-829" frameY="-445" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP DOWN0000" x="0" y="1480" width="544" height="419" frameX="-688" frameY="-513" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP DOWN0001" x="1792" y="0" width="526" height="426" frameX="-688" frameY="-506" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP UP0000" x="0" y="0" width="421" height="542" frameX="-719" frameY="-308" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP UP0001" x="421" y="0" width="445" height="529" frameX="-708" frameY="-321" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP RIGHT0000" x="1335" y="0" width="457" height="468" frameX="-705" frameY="-457" frameWidth="1920" frameHeight="1440" />
+<SubTexture name="THUMP RIGHT0001" x="0" y="1014" width="463" height="466" frameX="-713" frameY="-459" frameWidth="1920" frameHeight="1440" />
+</TextureAtlas>

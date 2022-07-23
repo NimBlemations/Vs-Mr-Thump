@@ -408,6 +408,18 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
+			
+			case 'thump':
+				frames = Paths.getSparrowAtlas('THUMP');
+				animation.addByPrefix('idle', 'THUMP idle0', 12, false);
+				animation.addByPrefix('singBACK', 'THUMP LEFT0', 12, false);
+				animation.addByPrefix('singDOWN', 'THUMP DOWN0', 12, false);
+				animation.addByPrefix('singUP', 'THUMP UP0', 12, false);
+				animation.addByPrefix('singFRONT', 'THUMP RIGHT0', 12, false);
+				
+				addOffset('idle');
+				
+				playAnim('idle');
 
 			case 'senpai':
 				frames = Paths.getSparrowAtlas('weeb/senpai');
