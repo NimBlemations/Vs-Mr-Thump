@@ -18,7 +18,7 @@ class Boyfriend extends Character
 
 	override function update(elapsed:Float)
 	{
-		if (!debugMode)
+		if (!debugMode && frames != null && animation.curAnim != null)
 		{
 			if (animation.curAnim.name.startsWith('sing'))
 			{

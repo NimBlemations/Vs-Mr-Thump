@@ -248,6 +248,8 @@ class PlayState extends MusicBeatState
 				curStage = 'school';
 			case 'thorns':
 				curStage = 'schoolEvil';
+			default:
+				curStage = 'stage';
 		}
 		
 		// This is prob the point of Stage.hx
@@ -586,6 +588,8 @@ class PlayState extends MusicBeatState
 				gfVersion = 'gf-pixel';
 			case 'schoolEvil':
 				gfVersion = 'gf-pixel';
+			default:
+				gfVersion = 'gf'; // idk, but i think I gotta do this
 		}
 
 		if (curStage == 'limo')
@@ -2270,53 +2274,57 @@ class PlayState extends MusicBeatState
 	
 			playerStrums.forEach(function(spr:FlxSprite)
 			{
-				switch (spr.ID)
+				if (spr.frames != null && spr.animation.curAnim != null)
 				{
-					case 2:
-						if (upP && spr.animation.curAnim.name != 'confirm')
-						{
-							spr.animation.play('pressed');
-							trace('play');
-						}
-						if (upR)
-						{
-							spr.animation.play('static');
-							repReleases++;
-						}
-					case 3:
-						if (rightP && spr.animation.curAnim.name != 'confirm')
-							spr.animation.play('pressed');
-						if (rightR)
-						{
-							spr.animation.play('static');
-							repReleases++;
-						}
-					case 1:
-						if (downP && spr.animation.curAnim.name != 'confirm')
-							spr.animation.play('pressed');
-						if (downR)
-						{
-							spr.animation.play('static');
-							repReleases++;
-						}
-					case 0:
-						if (leftP && spr.animation.curAnim.name != 'confirm')
-							spr.animation.play('pressed');
-						if (leftR)
-						{
-							spr.animation.play('static');
-							repReleases++;
-						}
+					switch (spr.ID)
+					{
+						case 2:
+							if (upP && spr.animation.curAnim.name != 'confirm')
+							{
+								spr.animation.play('pressed');
+								trace('play');
+							}
+							if (upR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						case 3:
+							if (rightP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (rightR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						case 1:
+							if (downP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (downR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+						case 0:
+							if (leftP && spr.animation.curAnim.name != 'confirm')
+								spr.animation.play('pressed');
+							if (leftR)
+							{
+								spr.animation.play('static');
+								repReleases++;
+							}
+					}
+					
+					
+					if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
+					{
+						spr.centerOffsets();
+						spr.offset.x -= 13;
+						spr.offset.y -= 13;
+					}
+					else
+						spr.centerOffsets();
 				}
-				
-				if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
-				{
-					spr.centerOffsets();
-					spr.offset.x -= 13;
-					spr.offset.y -= 13;
-				}
-				else
-					spr.centerOffsets();
 			});
 	}
 

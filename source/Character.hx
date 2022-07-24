@@ -520,10 +520,10 @@ class Character extends FlxSprite
 				animation.addByPrefix('singLEFT', 'Tankman Right Note', 24, false);
 				
 				addOffset('idle');
-				addOffset('singUP', 24, 56);
-				addOffset('singRIGHT', -1, -14);
-				addOffset('singLEFT', 100, -7);
-				addOffset('singDOWN', 98, -90);
+				addOffset('singUP', -24, 56);
+				addOffset('singRIGHT', 1, -14);
+				addOffset('singLEFT', -100, -7);
+				addOffset('singDOWN', -98, -90);
 				
 				playAnim('idle');
 				
@@ -534,7 +534,7 @@ class Character extends FlxSprite
 
 		if (isPlayer)
 		{
-			flipX = !flipX;
+			flipX = !flipX; // bloody hell i didn't get a good look at this before
 
 			// Doesn't flip for BF, since his are already in the right place???
 			if (!curCharacter.startsWith('bf'))
@@ -577,9 +577,9 @@ class Character extends FlxSprite
 
 	override function update(elapsed:Float)
 	{
-		if (curCharacter != null)
+		if (frames != null)
 		{
-			if (!curCharacter.startsWith('bf'))
+			if (!curCharacter.startsWith('bf') && animation.curAnim != null)
 			{
 				if (animation.curAnim.name.startsWith('sing'))
 				{
@@ -615,7 +615,7 @@ class Character extends FlxSprite
 	 */
 	public function dance()
 	{
-		if (!debugMode)
+		if (!debugMode && frames != null && animation.curAnim != null)
 		{
 			switch (curCharacter)
 			{
@@ -682,7 +682,10 @@ class Character extends FlxSprite
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
 		{
-			offset.set(daOffset[0], daOffset[1]);
+			if (flipX) // YEEEEEE I DID THE UNCOMMON THING!!!
+				offset.set(-daOffset[0], daOffset[1]);
+			else
+				offset.set(daOffset[0], daOffset[1]);
 		}
 		else
 			offset.set(0, 0);
