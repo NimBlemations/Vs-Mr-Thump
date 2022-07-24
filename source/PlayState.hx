@@ -136,8 +136,6 @@ class PlayState extends MusicBeatState
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
 	
-	var noteSplashFrames:FlxAtlasFrames; // bruh
-	
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -176,8 +174,6 @@ class PlayState extends MusicBeatState
 		lightCpuStrums = FlxG.save.data.lightCpuStrums;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-		
-		noteSplashFrames = Paths.getSparrowAtlas('noteSplashes');
 		
 		sicks = 0;
 		bads = 0;
@@ -2460,26 +2456,18 @@ class PlayState extends MusicBeatState
 						trace(sicks, badSolution); // fuckin bad
 						if (sicks > badSolution) // fuckin bad
 						{
-							var noteSplash:FlxSprite = new FlxSprite();
-							noteSplash.frames = noteSplashFrames;
-							noteSplash.animation.addByPrefix('splatP', 'note impact 1 purple0', 24, false);
-							noteSplash.animation.addByPrefix('splatB', 'note impact 1  blue0', 24, false);
-							noteSplash.animation.addByPrefix('splatG', 'note impact 1 green0', 24, false);
-							noteSplash.animation.addByPrefix('splatR', 'note impact 1 red0', 24, false);
+							var noteSplash:NoteSplash = new NoteSplash(note.noteData);
+							
 							strumLineSplashes.add(noteSplash);
-							noteSplash.x = note.getGraphicMidpoint().x;
-							noteSplash.y = note.getGraphicMidpoint().y;
-							switch (note.noteData)
+							
+							playerStrums.forEach(function(spr:FlxSprite)
 							{
-								case 0:
-									noteSplash.animation.play('splatP', true, false, 0);
-								case 1:
-									noteSplash.animation.play('splatB', true, false, 0);
-								case 2:
-									noteSplash.animation.play('splatG', true, false, 0);
-								case 3:
-									noteSplash.animation.play('splatR', true, false, 0);
-							}
+								if (Math.abs(note.noteData) == spr.ID)
+								{
+									noteSplash.x = spr.getGraphicMidpoint().x - 150;
+									noteSplash.y = spr.getGraphicMidpoint().y - 160;
+								}
+							});
 							new FlxTimer().start(0.2, function(tmr:FlxTimer)
 							{
 								noteSplash.kill();
