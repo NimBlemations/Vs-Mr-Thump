@@ -82,6 +82,7 @@ class PlayState extends MusicBeatState
 	private static var prevCamFollow:FlxObject;
 
 	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
+	private var strumLineSplashes:FlxTypedGroup<FlxSprite>; // bruh
 	private var playerStrums:FlxTypedGroup<FlxSprite>;
 
 	private var camZooming:Bool = false;
@@ -135,6 +136,8 @@ class PlayState extends MusicBeatState
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
 	
+	var noteSplashFrames:FlxAtlasFrames; // bruh
+	
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -173,6 +176,8 @@ class PlayState extends MusicBeatState
 		lightCpuStrums = FlxG.save.data.lightCpuStrums;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
+		
+		noteSplashFrames = Paths.getSparrowAtlas('noteSplashes');
 		
 		sicks = 0;
 		bads = 0;
@@ -716,6 +721,9 @@ class PlayState extends MusicBeatState
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
+		
+		strumLineSplashes = new FlxTypedGroup<FlxSprite>(); // bruh
+		add(strumLineSplashes); // bruh
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
@@ -787,8 +795,9 @@ class PlayState extends MusicBeatState
 		iconP2 = new HealthIcon(SONG.player2, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
-
+		
 		strumLineNotes.cameras = [camHUD];
+		strumLineSplashes.cameras = [camHUD]; // bruh
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
 		healthBarBG.cameras = [camHUD];
@@ -2446,7 +2455,37 @@ class PlayState extends MusicBeatState
 				{
 					if (!note.isSustainNote && !note.isBotNote)
 					{
+						var badSolution = sicks; // fuckin bad
 						popUpScore(note.strumTime);
+						trace(sicks, badSolution); // fuckin bad
+						if (sicks > badSolution) // fuckin bad
+						{
+							var noteSplash:FlxSprite = new FlxSprite();
+							noteSplash.frames = noteSplashFrames;
+							noteSplash.animation.addByPrefix('splatP', 'note impact 1 purple0', 24, false);
+							noteSplash.animation.addByPrefix('splatB', 'note impact 1  blue0', 24, false);
+							noteSplash.animation.addByPrefix('splatG', 'note impact 1 green0', 24, false);
+							noteSplash.animation.addByPrefix('splatR', 'note impact 1 red0', 24, false);
+							strumLineSplashes.add(noteSplash);
+							noteSplash.x = note.getGraphicMidpoint().x;
+							noteSplash.y = note.getGraphicMidpoint().y;
+							switch (note.noteData)
+							{
+								case 0:
+									noteSplash.animation.play('splatP', true, false, 0);
+								case 1:
+									noteSplash.animation.play('splatB', true, false, 0);
+								case 2:
+									noteSplash.animation.play('splatG', true, false, 0);
+								case 3:
+									noteSplash.animation.play('splatR', true, false, 0);
+							}
+							new FlxTimer().start(0.2, function(tmr:FlxTimer)
+							{
+								noteSplash.kill();
+								strumLineSplashes.remove(noteSplash, true);
+							});
+						}
 						combo += 1;
 					}
 					else
