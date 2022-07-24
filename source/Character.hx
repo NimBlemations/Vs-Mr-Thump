@@ -253,14 +253,14 @@ class Character extends FlxSprite
 				animation.addByPrefix('singDOWNmiss', 'Pico Down Note MISS', 24);
 
 				addOffset('idle');
-				addOffset("singUP", -29, 27);
-				addOffset("singRIGHT", -68, -7);
-				addOffset("singLEFT", 65, 9);
-				addOffset("singDOWN", 200, -70);
-				addOffset("singUPmiss", -19, 67);
-				addOffset("singRIGHTmiss", -60, 41);
-				addOffset("singLEFTmiss", 62, 64);
-				addOffset("singDOWNmiss", 210, -28);
+				addOffset("singUP", 29, 27);
+				addOffset("singRIGHT", 68, -7);
+				addOffset("singLEFT", -65, 9);
+				addOffset("singDOWN", -200, -70);
+				addOffset("singUPmiss", 19, 67);
+				addOffset("singRIGHTmiss", 60, 41);
+				addOffset("singLEFTmiss", -62, 64);
+				addOffset("singDOWNmiss", -210, -28);
 
 				playAnim('idle');
 

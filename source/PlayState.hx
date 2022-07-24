@@ -2070,6 +2070,11 @@ class PlayState extends MusicBeatState
 				rightR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "right";
 				downR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "down";
 				leftR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "left";
+				
+				up = upP ? true : false;
+				down = downP ? true : false;
+				right = rightP ? true : false;
+				left = leftP ? true : false;
 
 				upHold = upP ? true : upR ? false : true;
 				rightHold = rightP ? true : rightR ? false : true;
@@ -2590,7 +2595,13 @@ class PlayState extends MusicBeatState
 			// Conductor.changeBPM(SONG.bpm);
 
 			// Dad doesnt interupt his own notes
+			/*
 			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
+				dad.dance();
+			*/
+			if (dad.animation.curAnim.name == "idle")
+				dad.dance();
+			else if (dad.animation.curAnim.name != "idle" && dad.animation.curAnim.finished) // Well, it's a workaround lol
 				dad.dance();
 		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
