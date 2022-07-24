@@ -4,6 +4,7 @@ import Section.SwagSection;
 import Song.SwagSong;
 import WiggleEffect.WiggleEffectType;
 import ShaderBox; // My BOX!!!!
+import flash.filters.BlurFilter;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -34,6 +35,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import flixel.system.FlxAssets.FlxShader;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.display.BlendMode;
@@ -602,7 +604,7 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.song.toLowerCase() == 'horde')
 		{
-			dad.shader = new GloomShader(true, 49 / 255, 175 / 255, 209 / 255); // Color cyen (Insert VS. Hex reference)
+			dad.shader = new GloomShader(true, true, 49 / 255, 175 / 255, 209 / 255); // Color cyen (Insert VS. Hex reference)
 		}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
@@ -649,7 +651,8 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.song.toLowerCase() == 'horde')
 		{
-			boyfriend.shader = new AveragedShader();
+			// ShaderMaster.createFilterFrames(boyfriend, new BlurFilter());
+			boyfriend.shader = new NegativeShader();
 		}
 
 		// REPOSITIONING PER STAGE
@@ -1349,7 +1352,7 @@ class PlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
-
+		
 		if (FlxG.keys.justPressed.NINE)
 		{
 			if (iconP1.animation.curAnim.name == 'bf-old')
@@ -1666,13 +1669,26 @@ class PlayState extends MusicBeatState
 										opponentUI = false;
 									}
 								});
+								
 								if (opponentUI) {
 									if (Math.abs(daNote.noteData) == spr.ID)
 									{
 										spr.animation.play('confirm', true);
+										if (!curStage.startsWith('school'))
+										{
+											spr.centerOffsets();
+											spr.offset.x -= 13;
+											spr.offset.y -= 13;
+										}
+										else
+											spr.centerOffsets();
+										
 										new FlxTimer().start(0.2, function(tmr:FlxTimer) {
 											if (spr.animation.curAnim.name != 'static')
+											{
 												spr.animation.play('static', true);
+												spr.centerOffsets();
+											}
 										});
 									}
 								}

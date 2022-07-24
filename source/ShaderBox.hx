@@ -1,7 +1,27 @@
 package;
 
+import flash.filters.BitmapFilter;
 import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.graphics.frames.FlxFilterFrames;
 import flixel.system.FlxAssets.FlxShader;
+
+class ShaderMaster
+{
+	static inline var SIZE_INCREASE:Int = 50;
+	
+	public static function createFilterFrames(sprite:FlxSprite, filter:BitmapFilter)
+	{
+		var filterFrames = FlxFilterFrames.fromFrames(sprite.frames, SIZE_INCREASE, SIZE_INCREASE, [filter]);
+		updateFilter(sprite, filterFrames);
+		return filterFrames;
+	}
+	
+	public static function updateFilter(spr:FlxSprite, sprFilter:FlxFilterFrames)
+	{
+		sprFilter.applyToSprite(spr, false, true);
+	}
+}
 
 class GloomShader extends FlxShader
 {
@@ -14,6 +34,7 @@ class GloomShader extends FlxShader
 		uniform float g = 1;
 		uniform float b = 1;
 		uniform bool enabled = true;
+		uniform bool cutOut = false;
 
 		void main() {
 			if (enabled) {
@@ -26,8 +47,10 @@ class GloomShader extends FlxShader
 					float finalColor = (50 - average) / 50;
 					if (finalColor < 0) finalColor = 0;
 					if (finalColor > 1) finalColor = 1;
-
-					gl_FragColor = vec4(finalColor * r * alpha, finalColor * g * alpha, finalColor * b * alpha, alpha);
+					if (cutOut)
+						gl_FragColor = vec4(finalColor * r * alpha, finalColor * g * alpha, finalColor * b * alpha, finalColor * alpha);
+					else
+						gl_FragColor = vec4(finalColor * r * alpha, finalColor * g * alpha, finalColor * b * alpha, alpha);
 				}
 
 			} else {
@@ -35,10 +58,11 @@ class GloomShader extends FlxShader
 			}
 		}')
 	
-		public function new(enabled:Bool, ?r:Float = 1.0, ?g:Float = 1.0, ?b:Float = 1.0)
+		public function new(enabled:Bool, ?cutOut:Bool = false, ?r:Float = 1.0, ?g:Float = 1.0, ?b:Float = 1.0)
 		{
 			super();
 			this.enabled.value = [enabled];
+			this.cutOut.value = [cutOut];
 			this.r.value = [r];
 			this.g.value = [g];
 			this.b.value = [b];
@@ -79,6 +103,17 @@ class AveragedShader extends FlxShader
 			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
 			float average = ((color.r + color.g + color.b) / 3)/* * 255 */;
 			gl_FragColor = vec4(average, average, average, color.a);
+		}')
+}
+
+class NegativeShader extends FlxShader
+{
+	@:glFragmentSource('
+		#pragma header
+		
+		void main() {
+			vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
+			gl_FragColor = vec4((1.0 - color.r) * color.a, (1.0 - color.g) * color.a, (1.0 - color.b) * color.a, color.a);
 		}')
 		
 		public function new()
