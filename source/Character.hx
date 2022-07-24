@@ -288,12 +288,12 @@ class Character extends FlxSprite
 
 				addOffset('idle', -5);
 				addOffset("singUP", -29, 27);
-				addOffset("singRIGHT", -38, -7);
-				addOffset("singLEFT", 12, -6);
+				addOffset("singBACK", -38, -7);
+				addOffset("singFRONT", 12, -6);
 				addOffset("singDOWN", -10, -50);
 				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
+				addOffset("singBACKmiss", -30, 21);
+				addOffset("singFRONTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
 				addOffset('firstDeath', 37, 11);
@@ -418,6 +418,10 @@ class Character extends FlxSprite
 				animation.addByPrefix('singFRONT', 'THUMP RIGHT0', 12, false);
 				
 				addOffset('idle');
+				addOffset('singBACK', -100, 20);
+				addOffset('singDOWN', 0, -40);
+				addOffset('singUP', -30, 90);
+				addOffset('singFRONT', -10, 10);
 				
 				playAnim('idle');
 
