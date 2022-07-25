@@ -2717,7 +2717,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
-		if (curBeat == 2 && curStage == 'school' || curBeat == 2 && curStage == 'schoolEvil') // Too fucking slow songs honestly
+		if (curBeat == 2 && (curStage == 'school' || curStage == 'schoolEvil')) // Too fucking slow songs honestly
 		{
 			scrollInterchangable = true;
 			FlxTween.num(scrollInterchangableMultiplier, 1.5, 8.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
