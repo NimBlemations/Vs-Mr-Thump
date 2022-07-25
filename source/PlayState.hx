@@ -144,6 +144,7 @@ class PlayState extends MusicBeatState
 
 	public static var theFunne:Bool = true;
 	public static var lightCpuStrums:Bool = false;
+	public static var botPlay:Bool = false;
 	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
 	public static var repPresses:Int = 0;
@@ -177,6 +178,7 @@ class PlayState extends MusicBeatState
 		instance = this;
 		theFunne = FlxG.save.data.ghostTapping;
 		lightCpuStrums = FlxG.save.data.lightCpuStrums;
+		botPlay = FlxG.save.data.botPlay;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
@@ -781,10 +783,10 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
 
-		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "REPLAY", 20);
+		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, botPlay ? "BOTPLAY" : "REPLAY", 20);
 		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		replayTxt.scrollFactor.set();
-		if (loadRep)
+		if (loadRep || botPlay) // idk
 			{
 				add(replayTxt);
 			}
@@ -1356,6 +1358,11 @@ class PlayState extends MusicBeatState
 		num = Math.round( num ) / Math.pow(10, precision);
 		return num;
 		}
+	
+	function floatTween(value:Float, toNum:Float, delay:Float) // #2 on specific things to have in a file
+	{
+		FlxTween.num(value, toNum, delay, null, function (f:Float) { value = f; });
+	}
 
 	override public function update(elapsed:Float)
 	{
@@ -1715,7 +1722,7 @@ class PlayState extends MusicBeatState
 						daNote.destroy();
 					}
 					
-					if (daNote.mustPress && !daNote.wasGoodHit && daNote.isBotNote) {
+					if (daNote.mustPress && !daNote.wasGoodHit && daNote.isBotNote || daNote.mustPress && !daNote.wasGoodHit && botPlay) {
 						var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 						if (noteDiff < Conductor.safeZoneOffset * 0.25)
 						{
@@ -1774,13 +1781,13 @@ class PlayState extends MusicBeatState
 		if (vocals == null)
 			return;
 		
-		if (!loadRep)
+		if (!loadRep && !botPlay)
 			rep.SaveReplay();
 
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-		if (SONG.validScore)
+		if (SONG.validScore && !botPlay) // !botPlay is prob not needed here, buuuut....
 		{
 			#if !switch
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
@@ -2105,6 +2112,13 @@ class PlayState extends MusicBeatState
 				leftHold = leftP ? true : leftR ? false : true;
 			}
 		}
+		else if (botPlay)
+		{
+			up = false;
+			down = false;
+			right = false;
+			left = false;
+		}
 		else if (!loadRep) // record replay code
 		{
 			if (upP)
@@ -2291,8 +2305,9 @@ class PlayState extends MusicBeatState
 					}
 				});
 			}
-	
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left)
+			
+			
+			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left && !botPlay)
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 				{
@@ -2451,7 +2466,7 @@ class PlayState extends MusicBeatState
 			{
 				if (!note.wasGoodHit)
 				{
-					if (!note.isSustainNote && !note.isBotNote)
+					if (!note.isSustainNote && !note.isBotNote && !botPlay)
 					{
 						popUpScore(note.strumTime);
 						combo += 1;
@@ -2651,6 +2666,14 @@ class PlayState extends MusicBeatState
 				dad.dance();
 			else if (dad.animation.curAnim.name != "idle" && dad.animation.curAnim.finished) // Well, it's a workaround lol
 				dad.dance();
+			
+			if (botPlay) // Just to look more natural
+			{
+				if (boyfriend.animation.curAnim.name == "idle")
+					boyfriend.playAnim('idle');
+				else if (boyfriend.animation.curAnim.name != "idle" && boyfriend.animation.curAnim.finished) // Well, it's a workaround lol
+					boyfriend.playAnim('idle');
+			}
 		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
@@ -2679,7 +2702,7 @@ class PlayState extends MusicBeatState
 			gf.dance();
 		}
 
-		if (!boyfriend.animation.curAnim.name.startsWith("sing"))
+		if (!boyfriend.animation.curAnim.name.startsWith("sing") && !botPlay)
 		{
 			boyfriend.playAnim('idle');
 		}
@@ -2697,8 +2720,30 @@ class PlayState extends MusicBeatState
 		if (curBeat == 2 && curStage == 'school' || curBeat == 2 && curStage == 'schoolEvil') // Too fucking slow songs honestly
 		{
 			scrollInterchangable = true;
-			FlxTween.num(scrollInterchangableMultiplier, 1.5, 8.0, null, function (f:Float) { scrollInterchangableMultiplier = f; });
+			FlxTween.num(scrollInterchangableMultiplier, 1.5, 8.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
 			trace('tapdan');
+		}
+		
+		if (curSong == 'Guns')
+		{
+			if (curBeat == 2)
+			{
+				scrollInterchangable = true;
+				FlxTween.num(scrollInterchangableMultiplier, 0.25, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				trace('boin');
+			}
+			else if (curBeat == 24)
+				FlxTween.num(scrollInterchangableMultiplier, 1.0, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+			else if (curBeat == 224)
+			{
+				FlxTween.num(scrollInterchangableMultiplier, 1.25, 2.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				trace('boign time');
+			}
+			else if (curBeat == 287)
+			{
+				FlxTween.num(scrollInterchangableMultiplier, 1.15, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				trace('bogn time');
+			}
 		}
 
 		switch (curStage)

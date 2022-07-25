@@ -24,6 +24,9 @@ class OptionsMenu extends MusicBeatState
 	var versionShit:FlxText;
 	override function create()
 	{
+		if (FlxG.save.data.botPlay == null)
+			FlxG.save.data.botPlay = false;
+		
 		if (FlxG.save.data.lightCpuStrums == null)
 			FlxG.save.data.lightCpuStrums = false;
 		
@@ -37,7 +40,7 @@ class OptionsMenu extends MusicBeatState
 			FlxG.save.data.dfjk = false;
 
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.ghostTapping ? "Ghost tapping" : "No Ghost Tapping") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + '\n' + (FlxG.save.data.lightCpuStrums ? 'Light Cpu Strums' : 'Static Cpu Strums') + "\nLoad replays");
+		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.ghostTapping ? "Ghost tapping" : "No Ghost Tapping") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + '\n' + (FlxG.save.data.lightCpuStrums ? 'Light Cpu Strums' : 'Static Cpu Strums') + '\n' + (FlxG.save.data.botPlay ? 'Botplay On' : 'Botplay Off') + "\nLoad replays");
 		
 		trace(controlsStrings);
 
@@ -95,7 +98,7 @@ class OptionsMenu extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (curSelected != 4)
+				if (curSelected != 5)
 					grpControls.remove(grpControls.members[curSelected]);
 				switch(curSelected)
 				{
@@ -129,6 +132,12 @@ class OptionsMenu extends MusicBeatState
 						ctrl.targetY = curSelected - 3;
 						grpControls.add(ctrl);
 					case 4:
+						FlxG.save.data.botPlay = !FlxG.save.data.botPlay;
+						var ctrl:Alphabet = new Alphabet(0, (70 * curSelected) + 30, (FlxG.save.data.botPlay ? 'Botplay On' : 'Botplay Off'), true, false);
+						ctrl.isMenuItem = true;
+						ctrl.targetY = curSelected - 4;
+						grpControls.add(ctrl);
+					case 5:
 						trace('switch');
 						switchState(new LoadReplayState());
 				}
