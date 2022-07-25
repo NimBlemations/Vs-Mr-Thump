@@ -5,6 +5,7 @@ import sys.thread.Mutex;
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import openfl.system.System;
 
 // Stole from Hex Engine lmao
 
@@ -87,6 +88,7 @@ class MasterObjectLoader
 		Objects = [];
 		for (k in keep)
 			Objects.push(k);
+		System.gc();
 		mutex.release();
 	}
 	

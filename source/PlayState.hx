@@ -152,6 +152,9 @@ class PlayState extends MusicBeatState
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 	
+	public static var scrollInterchangable:Bool = false;
+	public static var scrollInterchangableMultiplier:Float = 1.0;
+	
 	var playStage:Stage;
 	
 	// I could whip up a Stage.hx for this
@@ -168,6 +171,8 @@ class PlayState extends MusicBeatState
 	
 	override public function create()
 	{
+		scrollInterchangable = false; // gotta set it back
+		scrollInterchangableMultiplier = 1.0; // gotta set it back
 		
 		instance = this;
 		theFunne = FlxG.save.data.ghostTapping;
@@ -1718,11 +1723,13 @@ class PlayState extends MusicBeatState
 							goodNoteHit(daNote);
 						}
 					}
-	
+					
+					var lazyScroll:Float = SONG.speed * scrollInterchangableMultiplier; // bruh
+					
 					if (FlxG.save.data.downscroll)
-						daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+						daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(scrollInterchangable ? lazyScroll : SONG.speed, 2)));
 					else
-						daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed, 2)));
+						daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(scrollInterchangable ? lazyScroll : SONG.speed, 2)));
 					//trace(daNote.y);
 					// WIP interpolation shit? Need to fix the pause issue
 					// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
@@ -2086,17 +2093,12 @@ class PlayState extends MusicBeatState
 				rightP = NearlyEquals(rep.replay.keyPresses[repPresses].time, Conductor.songPosition) && rep.replay.keyPresses[repPresses].key == "right";
 				downP = NearlyEquals(rep.replay.keyPresses[repPresses].time, Conductor.songPosition) && rep.replay.keyPresses[repPresses].key == "down";
 				leftP = NearlyEquals(rep.replay.keyPresses[repPresses].time, Conductor.songPosition)  && rep.replay.keyPresses[repPresses].key == "left";	
-
+				
 				upR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "up";
 				rightR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "right";
 				downR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "down";
 				leftR = NearlyEquals(rep.replay.keyReleases[repReleases].time, Conductor.songPosition) && rep.replay.keyReleases[repReleases].key == "left";
 				
-				up = upP ? true : false;
-				down = downP ? true : false;
-				right = rightP ? true : false;
-				left = leftP ? true : false;
-
 				upHold = upP ? true : upR ? false : true;
 				rightHold = rightP ? true : rightR ? false : true;
 				downHold = downP ? true : downR ? false : true;
@@ -2451,33 +2453,36 @@ class PlayState extends MusicBeatState
 				{
 					if (!note.isSustainNote && !note.isBotNote)
 					{
-						var badSolution = sicks; // fuckin bad
 						popUpScore(note.strumTime);
-						trace(sicks, badSolution); // fuckin bad
-						if (sicks > badSolution) // fuckin bad
-						{
-							var noteSplash:NoteSplash = new NoteSplash(note.noteData);
-							
-							strumLineSplashes.add(noteSplash);
-							
-							playerStrums.forEach(function(spr:FlxSprite)
-							{
-								if (Math.abs(note.noteData) == spr.ID)
-								{
-									noteSplash.x = spr.getGraphicMidpoint().x - 150;
-									noteSplash.y = spr.getGraphicMidpoint().y - 160;
-								}
-							});
-							new FlxTimer().start(0.2, function(tmr:FlxTimer)
-							{
-								noteSplash.kill();
-								strumLineSplashes.remove(noteSplash, true);
-							});
-						}
 						combo += 1;
 					}
 					else
 						totalNotesHit += 1;
+					
+					var noteDiff:Float = Math.abs(note.strumTime - Conductor.songPosition); // fuckin bad
+					if (!note.isSustainNote && noteDiff < Conductor.safeZoneOffset * 0.25) // fuckin bad
+					{
+						var noteSplash:NoteSplash = new NoteSplash(note.noteData);
+						
+						strumLineSplashes.add(noteSplash);
+						
+						if (note.isBotNote)
+							noteSplash.shader = new NegativeShader();
+						
+						playerStrums.forEach(function(spr:FlxSprite)
+						{
+							if (Math.abs(note.noteData) == spr.ID)
+							{
+								noteSplash.x = (spr.x - spr.width) + spr.width / 4;
+								noteSplash.y = (spr.y - spr.height) + spr.height / 4;
+							}
+						});
+						new FlxTimer().start(0.2, function(tmr:FlxTimer)
+						{
+							noteSplash.kill();
+							strumLineSplashes.remove(noteSplash, true);
+						});
+					}
 		
 					if (note.noteData >= 0)
 						health += 0.023;
@@ -2687,6 +2692,13 @@ class PlayState extends MusicBeatState
 			{
 				dad.playAnim('cheer', true);
 			}
+		}
+		
+		if (curBeat == 2 && curStage == 'school' || curBeat == 2 && curStage == 'schoolEvil') // Too fucking slow songs honestly
+		{
+			scrollInterchangable = true;
+			FlxTween.num(scrollInterchangableMultiplier, 1.5, 8.0, null, function (f:Float) { scrollInterchangableMultiplier = f; });
+			trace('tapdan');
 		}
 
 		switch (curStage)

@@ -27,6 +27,8 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 
 	public var noteScore:Float = 1;
+	
+	public var initialHeight:Float = 0;
 
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var PURP_NOTE:Int = 0;
@@ -107,7 +109,7 @@ class Note extends FlxSprite
 		
 		if (isBotNote)
 		{
-			shader = new FranceShader();
+			shader = new NegativeShader();
 		}
 
 		switch (noteData)
@@ -167,6 +169,8 @@ class Note extends FlxSprite
 					case 3:
 						prevNote.animation.play('redhold');
 				}
+				
+				prevNote.initialHeight = prevNote.scale.y;
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.5 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
@@ -203,6 +207,25 @@ class Note extends FlxSprite
 		{
 			if (alpha > 0.3)
 				alpha = 0.3;
+		}
+		
+		if (PlayState.scrollInterchangable)
+		{
+			if (isSustainNote && prevNote != null)
+			{
+				if (prevNote.isSustainNote)
+				{
+					try
+					{
+						if (prevNote.scale == null)
+							return;
+						prevNote.scale.y = prevNote.initialHeight * (Conductor.stepCrochet / 100 * 1.5 * (PlayState.SONG.speed * PlayState.scrollInterchangableMultiplier));
+						prevNote.updateHitbox();
+					} catch (e) {
+						trace('Fuck. ($e)');
+					}
+				}
+			}
 		}
 	}
 }
