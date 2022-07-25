@@ -2717,10 +2717,15 @@ class PlayState extends MusicBeatState
 			}
 		}
 		
+		function slideMultiplier(value:Float, delay:Float) // local function moment (fuck you haxeflixel you made me do this)
+		{
+			FlxTween.num(scrollInterchangableMultiplier, value, delay, null, function (f:Float) { scrollInterchangableMultiplier = f; });
+		}
+		
 		if (curBeat == 2 && (curStage == 'school' || curStage == 'schoolEvil')) // Too fucking slow songs honestly
 		{
 			scrollInterchangable = true;
-			FlxTween.num(scrollInterchangableMultiplier, 1.5, 8.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+			slideMultiplier(1.5, 8.0);
 			trace('tapdan');
 		}
 		
@@ -2729,19 +2734,23 @@ class PlayState extends MusicBeatState
 			if (curBeat == 2)
 			{
 				scrollInterchangable = true;
-				FlxTween.num(scrollInterchangableMultiplier, 0.25, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				slideMultiplier(0.25, 4.0);
 				trace('boin');
 			}
 			else if (curBeat == 24)
-				FlxTween.num(scrollInterchangableMultiplier, 1.0, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				slideMultiplier(1.0, 4.0);
+			else if (curBeat == 128)
+				slideMultiplier(1.05, 2.0);
+			else if (curBeat == 160)
+				slideMultiplier(1.0, 8.0);
 			else if (curBeat == 224)
 			{
-				FlxTween.num(scrollInterchangableMultiplier, 1.25, 2.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				slideMultiplier(1.2, 2.0);
 				trace('boign time');
 			}
 			else if (curBeat == 287)
 			{
-				FlxTween.num(scrollInterchangableMultiplier, 1.15, 4.0, null, function (f:Float) { scrollInterchangableMultiplier = f; }); // fucking tedious piece of shit
+				slideMultiplier(1.15, 4.0);
 				trace('bogn time');
 			}
 		}

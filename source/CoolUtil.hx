@@ -1,6 +1,5 @@
 package;
 
-import flixel.tweens.FlxTween;
 import lime.utils.Assets;
 
 using StringTools;
