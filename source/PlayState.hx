@@ -1659,23 +1659,30 @@ class PlayState extends MusicBeatState
 							if (SONG.notes[Math.floor(curStep / 16)].altAnim)
 								altAnim = '-alt';
 						}
+						
+						var decisor:Character;
+						
+						if (SONG.notes[Math.floor(curStep / 16)].playerNotes) // Just because weird ass mechanic lol
+							decisor = boyfriend;
+						else
+							decisor = dad;
 	
 						switch (Math.abs(daNote.noteData))
 						{
 							case 2:
-								dad.playAnim('singUP' + altAnim, true);
+								decisor.playAnim('singUP' + altAnim, true);
 							case 3:
-								if (dad.animation.getByName('singFRONT') != null) // Trying new setup of characters
-									dad.playAnim('singFRONT' + altAnim, true);
+								if (decisor.animation.getByName('singFRONT') != null) // Trying new setup of characters
+									decisor.playAnim('singFRONT' + altAnim, true);
 								else
-									dad.playAnim('singRIGHT' + altAnim, true);
+									decisor.playAnim('singRIGHT' + altAnim, true);
 							case 1:
-								dad.playAnim('singDOWN' + altAnim, true);
+								decisor.playAnim('singDOWN' + altAnim, true);
 							case 0:
-								if (dad.animation.getByName('singBACK') != null)
-									dad.playAnim('singBACK' + altAnim, true);
+								if (decisor.animation.getByName('singBACK') != null)
+									decisor.playAnim('singBACK' + altAnim, true);
 								else
-									dad.playAnim('singLEFT' + altAnim, true);
+									decisor.playAnim('singLEFT' + altAnim, true);
 						}
 						
 						if (lightCpuStrums) {
@@ -1722,7 +1729,7 @@ class PlayState extends MusicBeatState
 						daNote.destroy();
 					}
 					
-					if (daNote.mustPress && !daNote.wasGoodHit && daNote.isBotNote || daNote.mustPress && !daNote.wasGoodHit && botPlay) {
+					if (daNote.mustPress && !daNote.wasGoodHit && (daNote.isBotNote || botPlay)) {
 						var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
 						if (noteDiff < Conductor.safeZoneOffset * 0.25)
 						{
@@ -2307,7 +2314,7 @@ class PlayState extends MusicBeatState
 			}
 			
 			
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left && !botPlay)
+			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left && !botPlay && !SONG.notes[Math.floor(curStep /16)].playerNotes)
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 				{
@@ -2667,7 +2674,7 @@ class PlayState extends MusicBeatState
 			else if (dad.animation.curAnim.name != "idle" && dad.animation.curAnim.finished) // Well, it's a workaround lol
 				dad.dance();
 			
-			if (botPlay) // Just to look more natural
+			if (botPlay || SONG.notes[Math.floor(curStep /16)].playerNotes) // Just to look more natural
 			{
 				if (boyfriend.animation.curAnim.name == "idle")
 					boyfriend.playAnim('idle');
@@ -2702,7 +2709,7 @@ class PlayState extends MusicBeatState
 			gf.dance();
 		}
 
-		if (!boyfriend.animation.curAnim.name.startsWith("sing") && !botPlay)
+		if (!boyfriend.animation.curAnim.name.startsWith("sing") && !botPlay && !SONG.notes[Math.floor(curStep /16)].playerNotes)
 		{
 			boyfriend.playAnim('idle');
 		}
