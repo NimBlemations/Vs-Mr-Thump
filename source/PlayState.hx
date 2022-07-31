@@ -40,6 +40,7 @@ import haxe.Json;
 import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
+import openfl.filters.BitmapFilter;
 import openfl.filters.ShaderFilter;
 
 using StringTools;
@@ -659,8 +660,14 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.song.toLowerCase() == 'horde')
 		{
-			// ShaderMaster.createFilterFrames(boyfriend, new BlurFilter());
 			boyfriend.shader = new NegativeShader();
+			
+			var filters:Array<BitmapFilter> = []; // Might be unnecessary
+			
+			var filter = new ShaderFilter(new BrokenGlassShader());
+			filters.push(filter);
+			
+			FlxG.camera.setFilters(filters);
 		}
 
 		// REPOSITIONING PER STAGE
@@ -1785,11 +1792,10 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
-		if (vocals == null)
-			return;
-		
 		if (!loadRep && !botPlay)
 			rep.SaveReplay();
+		else if (loadRep)
+			loadRep = false;
 
 		canPause = false;
 		FlxG.sound.music.volume = 0;
