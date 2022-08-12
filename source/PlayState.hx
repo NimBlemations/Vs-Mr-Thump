@@ -662,12 +662,14 @@ class PlayState extends MusicBeatState
 		{
 			boyfriend.shader = new NegativeShader();
 			
+			/*
 			var filters:Array<BitmapFilter> = []; // Might be unnecessary
 			
 			var filter = new ShaderFilter(new BrokenGlassShader());
 			filters.push(filter);
 			
 			FlxG.camera.setFilters(filters);
+			*/
 		}
 
 		// REPOSITIONING PER STAGE

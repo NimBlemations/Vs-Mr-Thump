@@ -233,13 +233,13 @@ class Character extends FlxSprite
 				addOffset("singDOWN", -40, -94);
 				playAnim('idle');
 			case 'pico':
-				tex = Paths.getSparrowAtlas('Pico_FNF_assetss');
+				tex = Paths.getSparrowAtlas('Pico_FNF_assetss', 'week3');
 				frames = tex;
 				animation.addByPrefix('idle', "Pico Idle Dance", 24);
 				animation.addByPrefix('singUP', 'pico Up note0', 24, false);
 				animation.addByPrefix('singDOWN', 'Pico Down Note0', 24, false);
 				
-				animation.addByPrefix('singLEFT', 'Pico NOTE LEFT0', 24, false);
+				animation.addByPrefix('singLEFT', 'Pico NOTE LEFT0', 24, false); // How the fuck does this work
 				animation.addByPrefix('singRIGHT', 'Pico Note Right0', 24, false);
 				animation.addByPrefix('singRIGHTmiss', 'Pico Note Right Miss', 24, false);
 				animation.addByPrefix('singLEFTmiss', 'Pico NOTE LEFT miss', 24, false);
@@ -248,16 +248,18 @@ class Character extends FlxSprite
 				animation.addByPrefix('singDOWNmiss', 'Pico Down Note MISS', 24);
 
 				addOffset('idle');
-				addOffset("singUP", 29, 27);
-				addOffset("singRIGHT", 68, -7);
-				addOffset("singLEFT", -65, 9);
-				addOffset("singDOWN", -200, -70);
-				addOffset("singUPmiss", 19, 67);
-				addOffset("singRIGHTmiss", 60, 41);
-				addOffset("singLEFTmiss", -62, 64);
-				addOffset("singDOWNmiss", -210, -28);
+				addOffset("singUP", -29, 27);
+				addOffset("singLEFT", -68, -7);
+				addOffset("singRIGHT", 65, 9);
+				addOffset("singDOWN", 200, -70);
+				addOffset("singUPmiss", -19, 67);
+				addOffset("singLEFTmiss", -60, 41);
+				addOffset("singRIGHTmiss", 62, 64);
+				addOffset("singDOWNmiss", 210, -28);
 
 				playAnim('idle');
+				
+				barColor = 0xFFb7d855;
 
 				flipX = true;
 
@@ -519,7 +521,7 @@ class Character extends FlxSprite
 
 				playAnim('idle');
 			case 'tankman':
-				frames = Paths.getSparrowAtlas('tankman');
+				frames = Paths.getSparrowAtlas('tankman', 'shared');
 				animation.addByPrefix('idle', 'Tankman Idle Dance', 24, false);
 				animation.addByPrefix('singUP', 'Tankman UP note', 24, false);
 				animation.addByPrefix('singDOWN', 'Tankman DOWN note', 24, false);
@@ -527,10 +529,10 @@ class Character extends FlxSprite
 				animation.addByPrefix('singRIGHT', 'Tankman Right Note', 24, false);
 				
 				addOffset('idle');
-				addOffset('singUP', -24, 56);
-				addOffset('singRIGHT', 1, -14);
-				addOffset('singLEFT', -100, -7);
-				addOffset('singDOWN', -98, -90);
+				addOffset('singUP', 24, 56);
+				addOffset('singLEFT', -1, -14);
+				addOffset('singRIGHT', 100, -7);
+				addOffset('singDOWN', 98, -90);
 				
 				playAnim('idle');
 				
@@ -554,6 +556,10 @@ class Character extends FlxSprite
 				var oldRight = animation.getByName('singRIGHT').frames;
 				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
 				animation.getByName('singLEFT').frames = oldRight;
+				
+				var oldRightOffset = animOffsets.get('singRIGHT'); // Reverse offsets as well
+				animOffsets['singRIGHT'] = animOffsets.get('singLEFT');
+				animOffsets['singLEFT'] = oldRightOffset;
 
 				// IF THEY HAVE MISS ANIMATIONS??
 				if (animation.getByName('singRIGHTmiss') != null)
@@ -561,7 +567,12 @@ class Character extends FlxSprite
 					var oldMiss = animation.getByName('singRIGHTmiss').frames;
 					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
 					animation.getByName('singLEFTmiss').frames = oldMiss;
+					
+					var oldMissOffset = animOffsets.get('singRIGHTmiss'); // Reverse offsets of missing as well
+					animOffsets['singRIGHTmiss'] = animOffsets.get('singLEFTmiss');
+					animOffsets['singLEFTmiss'] = oldMissOffset;
 				}
+				trace(curCharacter + ' flipped!' + (isPlayer ? ' (PLAYER)' : ''));
 			}
 		}
 	}
@@ -570,7 +581,7 @@ class Character extends FlxSprite
 	{
 		if (frames != null)
 		{
-			if (!curCharacter.startsWith('bf') && animation.curAnim != null)
+			if (!isPlayer && animation.curAnim != null)
 			{
 				if (animation.curAnim.name.startsWith('sing'))
 				{
@@ -641,10 +652,14 @@ class Character extends FlxSprite
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
 		{
+			offset.set(daOffset[0], daOffset[1]);
+			// I think the offsets flip on their own
+			/*
 			if (flipX) // YEEEEEE I DID THE UNCOMMON THING!!!
 				offset.set(-daOffset[0], daOffset[1]);
 			else
 				offset.set(daOffset[0], daOffset[1]);
+			*/
 		}
 		else
 			offset.set(0, 0);
