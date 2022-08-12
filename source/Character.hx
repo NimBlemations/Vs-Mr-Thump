@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
 import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.util.FlxColor;
 
 using StringTools;
 
@@ -14,6 +15,8 @@ class Character extends FlxSprite
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
+	
+	public var barColor:FlxColor = 0x00000000;
 
 	public var holdTimer:Float = 0;
 
@@ -24,6 +27,8 @@ class Character extends FlxSprite
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
 		this.isPlayer = isPlayer;
+		
+		barColor = isPlayer ? 0xFF66FF33 : 0xFFFF0000;
 
 		var tex:FlxAtlasFrames;
 		antialiasing = true;
@@ -233,22 +238,12 @@ class Character extends FlxSprite
 				animation.addByPrefix('idle', "Pico Idle Dance", 24);
 				animation.addByPrefix('singUP', 'pico Up note0', 24, false);
 				animation.addByPrefix('singDOWN', 'Pico Down Note0', 24, false);
-				if (isPlayer)
-				{
-					animation.addByPrefix('singLEFT', 'Pico NOTE LEFT0', 24, false);
-					animation.addByPrefix('singRIGHT', 'Pico Note Right0', 24, false);
-					animation.addByPrefix('singRIGHTmiss', 'Pico Note Right Miss', 24, false);
-					animation.addByPrefix('singLEFTmiss', 'Pico NOTE LEFT miss', 24, false);
-				}
-				else
-				{
-					// Need to be flipped! REDO THIS LATER!
-					animation.addByPrefix('singLEFT', 'Pico Note Right0', 24, false);
-					animation.addByPrefix('singRIGHT', 'Pico NOTE LEFT0', 24, false);
-					animation.addByPrefix('singRIGHTmiss', 'Pico NOTE LEFT miss', 24, false);
-					animation.addByPrefix('singLEFTmiss', 'Pico Note Right Miss', 24, false);
-				}
-
+				
+				animation.addByPrefix('singLEFT', 'Pico NOTE LEFT0', 24, false);
+				animation.addByPrefix('singRIGHT', 'Pico Note Right0', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'Pico Note Right Miss', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'Pico NOTE LEFT miss', 24, false);
+				
 				animation.addByPrefix('singUPmiss', 'pico Up note miss', 24);
 				animation.addByPrefix('singDOWNmiss', 'Pico Down Note MISS', 24);
 
@@ -271,12 +266,12 @@ class Character extends FlxSprite
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singFRONT', 'BF NOTE LEFT0', 24, false); // LEFT
-				animation.addByPrefix('singBACK', 'BF NOTE RIGHT0', 24, false); // RIGHT
+				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false); // LEFT
+				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false); // RIGHT
 				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
 				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singFRONTmiss', 'BF NOTE LEFT MISS', 24, false); // LEFT
-				animation.addByPrefix('singBACKmiss', 'BF NOTE RIGHT MISS', 24, false); // RIGHT
+				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false); // LEFT
+				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false); // RIGHT
 				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 
@@ -288,12 +283,12 @@ class Character extends FlxSprite
 
 				addOffset('idle', -5);
 				addOffset("singUP", -29, 27);
-				addOffset("singBACK", -38, -7);
-				addOffset("singFRONT", 12, -6);
+				addOffset("singRIGHT", -38, -7);
+				addOffset("singLEFT", 12, -6);
 				addOffset("singDOWN", -10, -50);
 				addOffset("singUPmiss", -29, 27);
-				addOffset("singBACKmiss", -30, 21);
-				addOffset("singFRONTmiss", 12, 24);
+				addOffset("singRIGHTmiss", -30, 21);
+				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
 				addOffset('firstDeath', 37, 11);
@@ -302,6 +297,8 @@ class Character extends FlxSprite
 				addOffset('scared', -4);
 
 				playAnim('idle');
+				
+				barColor = 0xFF31b0d1;
 
 				flipX = true;
 
@@ -331,6 +328,8 @@ class Character extends FlxSprite
 				addOffset("hey", 7, 4);
 
 				playAnim('idle');
+				
+				barColor = 0xFF31b0d1;
 
 				flipX = true;
 			case 'bf-car':
@@ -356,6 +355,8 @@ class Character extends FlxSprite
 				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				playAnim('idle');
+				
+				barColor = 0xFF31b0d1;
 
 				flipX = true;
 			case 'bf-pixel':
@@ -389,6 +390,8 @@ class Character extends FlxSprite
 				height -= 100;
 
 				antialiasing = false;
+				
+				barColor = 0xFF31b0d1;
 
 				flipX = true;
 			case 'bf-pixel-dead':
@@ -408,6 +411,8 @@ class Character extends FlxSprite
 				updateHitbox();
 				antialiasing = false;
 				flipX = true;
+				
+				barColor = 0xFF31b0d1;
 			
 			case 'thump':
 				frames = Paths.getSparrowAtlas('THUMP');
@@ -422,6 +427,8 @@ class Character extends FlxSprite
 				addOffset('singDOWN', 0, -40);
 				addOffset('singUP', -30, 90);
 				addOffset('singFRONT', -10, 10);
+				
+				barColor = 0x33333333;
 				
 				playAnim('idle');
 
@@ -516,8 +523,8 @@ class Character extends FlxSprite
 				animation.addByPrefix('idle', 'Tankman Idle Dance', 24, false);
 				animation.addByPrefix('singUP', 'Tankman UP note', 24, false);
 				animation.addByPrefix('singDOWN', 'Tankman DOWN note', 24, false);
-				animation.addByPrefix('singRIGHT', 'Tankman Note Left', 24, false);
-				animation.addByPrefix('singLEFT', 'Tankman Right Note', 24, false);
+				animation.addByPrefix('singLEFT', 'Tankman Note Left', 24, false);
+				animation.addByPrefix('singRIGHT', 'Tankman Right Note', 24, false);
 				
 				addOffset('idle');
 				addOffset('singUP', -24, 56);
@@ -527,6 +534,8 @@ class Character extends FlxSprite
 				
 				playAnim('idle');
 				
+				barColor = 0xFF000000;
+				
 				flipX = true;
 		}
 
@@ -535,23 +544,23 @@ class Character extends FlxSprite
 		if (isPlayer)
 		{
 			flipX = !flipX; // bloody hell i didn't get a good look at this before
-			
-			if (flipX)
+		}
+		
+		if (flipX) // I separated these! :D
+		{
+			// var animArray
+			if (animation.getByName('singRIGHT') != null)
 			{
-				// var animArray
-				if (animation.getByName('singRIGHT') != null)
-				{
-					var oldRight = animation.getByName('singRIGHT').frames;
-					animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
-					animation.getByName('singLEFT').frames = oldRight;
+				var oldRight = animation.getByName('singRIGHT').frames;
+				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
+				animation.getByName('singLEFT').frames = oldRight;
 
-					// IF THEY HAVE MISS ANIMATIONS??
-					if (animation.getByName('singRIGHTmiss') != null)
-					{
-						var oldMiss = animation.getByName('singRIGHTmiss').frames;
-						animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
-						animation.getByName('singLEFTmiss').frames = oldMiss;
-					}
+				// IF THEY HAVE MISS ANIMATIONS??
+				if (animation.getByName('singRIGHTmiss') != null)
+				{
+					var oldMiss = animation.getByName('singRIGHTmiss').frames;
+					animation.getByName('singRIGHTmiss').frames = animation.getByName('singLEFTmiss').frames;
+					animation.getByName('singLEFTmiss').frames = oldMiss;
 				}
 			}
 		}
