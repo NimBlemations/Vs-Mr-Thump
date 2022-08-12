@@ -1713,14 +1713,6 @@ class PlayState extends MusicBeatState
 										}
 										else
 											spr.centerOffsets();
-										
-										new FlxTimer().start(0.2, function(tmr:FlxTimer) {
-											if (spr.animation.curAnim.name != 'static')
-											{
-												spr.animation.play('static', true);
-												spr.centerOffsets();
-											}
-										});
 									}
 								}
 							});
@@ -1778,6 +1770,24 @@ class PlayState extends MusicBeatState
 						daNote.destroy();
 					}
 				});
+				if (lightCpuStrums) { // Reset the opponent's glowed strums on completing animation
+					strumLineNotes.forEach(function(spr:FlxSprite) {
+						var opponentUI:Bool = true;
+						playerStrums.forEach(function(plySpr:FlxSprite) {
+							if (plySpr == spr) {
+								opponentUI = false;
+							}
+						});
+						
+						if (opponentUI) {
+							if (spr.animation.curAnim.name != 'static' && spr.animation.curAnim.finished)
+							{
+								spr.animation.play('static', true);
+								spr.centerOffsets();
+							}
+						}
+					});
+				}
 			}
 
 
@@ -2715,7 +2725,7 @@ class PlayState extends MusicBeatState
 			gf.dance();
 		}
 		
-		if (SONG.notes[Math.floor(curStep / 16)].playerNotes != null)
+		if (SONG.notes[Math.floor(curStep / 16)] != null)
 		{
 			if (!boyfriend.animation.curAnim.name.startsWith("sing") && !botPlay && !SONG.notes[Math.floor(curStep /16)].playerNotes)
 			{
@@ -2745,7 +2755,7 @@ class PlayState extends MusicBeatState
 			trace('tapdan');
 		}
 		
-		if (curSong == 'Guns')
+		if (curSong == 'Guns') // Events in Guns
 		{
 			if (curBeat == 2)
 			{
