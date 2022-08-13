@@ -10,6 +10,12 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.0.5
+      - name: Why would this be needed?
+      - run: |
+          echo No, seriously, why would this be needed?
+          echo What would this test?
+          echo Idfk this some weird shit fr.
+      - name: Run some shit idk
       - run: |
           haxe -version
           haxelib install hxnodejs
