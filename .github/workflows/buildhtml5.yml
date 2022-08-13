@@ -44,7 +44,7 @@ jobs:
       - run: |
           haxelib run lime build html5
       - name: Get malded nerd
-        run: |
+      - run: |
           echo cry bitch
           echo get nerd'd
           echo lmao
