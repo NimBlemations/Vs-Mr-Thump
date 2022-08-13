@@ -20,7 +20,7 @@ jobs:
           haxe-version: 4.2.4
       # Runs a set of commands using the runners shell
       - name: doin shit prepare
-      - run: |
+        run: |
           sudo add-apt-repository ppa:haxe/releases -y
           sudo apt-get update
           sudo apt-get install gcc-multilib g++-multilib haxe -y
@@ -41,10 +41,10 @@ jobs:
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
       - name: wow its building how
-      - run: |
+        run: |
           haxelib run lime build html5
       - name: Get malded nerd
-      - run: |
+        run: |
           echo cry bitch
           echo get nerd'd
           echo lmao
