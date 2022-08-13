@@ -557,7 +557,7 @@ class Character extends FlxSprite
 				animation.getByName('singRIGHT').frames = animation.getByName('singLEFT').frames;
 				animation.getByName('singLEFT').frames = oldRight;
 				
-				var oldRightOffset = animOffsets.get('singRIGHT'); // Reverse offsets as well
+				var oldRightOffset = animOffsets.get('singRIGHT'); // Reverse offsets as well (am I supposed to do this or not?!)
 				animOffsets['singRIGHT'] = animOffsets.get('singLEFT');
 				animOffsets['singLEFT'] = oldRightOffset;
 
