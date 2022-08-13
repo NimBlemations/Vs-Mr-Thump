@@ -8,7 +8,7 @@ on: [push, pull_request]
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  buildLinux:
+  buildHtml:
     runs-on: ubuntu-latest
     
     steps:
@@ -19,7 +19,7 @@ jobs:
         with:
           haxe-version: 4.2.4
       # Runs a set of commands using the runners shell
-      - name: wow its building how
+      - name: doin shit prepare
         run: |
           sudo add-apt-repository ppa:haxe/releases -y
           sudo apt-get update
@@ -40,6 +40,8 @@ jobs:
           haxelib git polymod https://github.com/larsiusprime/polymod.git
           haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
+      - name: wow its building how
+      - run: |
           haxelib run lime build html5
       - name: Get malded nerd
         run: |

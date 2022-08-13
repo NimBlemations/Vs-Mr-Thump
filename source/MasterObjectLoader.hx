@@ -1,7 +1,9 @@
 package;
 
 import flixel.addons.ui.FlxUI;
+#if !html5
 import sys.thread.Mutex;
+#end
 import flixel.graphics.FlxGraphic;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,7 +13,9 @@ import openfl.system.System;
 
 class MasterObjectLoader 
 {
+	#if !html5
 	public static var mutex:Mutex;
+	#end
 	
 	public static var Objects:Array<Dynamic> = [];
 
@@ -25,14 +29,18 @@ class MasterObjectLoader
 		}
 		if (Std.isOfType(bruh, FlxUI))
 			return;
+		#if !html5
 		mutex.acquire();
+		#end
 		/*
 		#if debug
 		trace('lmao adding ' + Type.getClassName(Type.getClass(bruh)));
 		#end
 		*/
 		Objects.push(bruh);
+		#if !html5
 		mutex.release();
+		#end
 	}
 
 	public static function removeObject(object:Dynamic)
@@ -45,20 +53,26 @@ class MasterObjectLoader
 		}
 		if (Std.isOfType(object, FlxUI))
 			return;
+		#if !html5
 		mutex.acquire();
+		#end
 		/*
 		#if debug
 		trace('lmao removing ' + Type.getClassName(Type.getClass(object)));
 		#end
 		*/
 		Objects.remove(object);
+		#if !html5
 		mutex.release();
+		#end
 	}
 
 	public static function resetAssets(?removeLoadingScreen:Bool = false)
 	{
 		var keep:Array<Dynamic> = [];
+		#if !html5
 		mutex.acquire();
+		#end
 		for (object in Objects)
 		{
 			if (Std.isOfType(object, FlxSprite))
@@ -89,7 +103,9 @@ class MasterObjectLoader
 		for (k in keep)
 			Objects.push(k);
 		System.gc();
+		#if !html5
 		mutex.release();
+		#end
 	}
 	
 }

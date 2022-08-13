@@ -1,13 +1,17 @@
 import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
+#if !html5
 import sys.thread.Mutex;
+#end
 import flixel.FlxG;
 import flixel.FlxState;
 
 class LoadingBar extends MusicBeatState
 {
 	var target:MusicBeatState;
+	#if !html5
 	var loadMutex:Mutex;
+	#end
 
 	var bar:FlxBar;
 
@@ -19,7 +23,9 @@ class LoadingBar extends MusicBeatState
 	{
 		target = _target;
 		trace('loadee bar');
+		#if !html5
 		loadMutex = new Mutex();
+		#end
 		super();
 	}
 	
@@ -46,14 +52,18 @@ class LoadingBar extends MusicBeatState
 			startLoad = true;
 			sys.thread.Thread.create(() ->
 			{
+				#if !html5
 				loadMutex.acquire();
+				#end
 				trace('resetti');
 				MasterObjectLoader.resetAssets();
 				target.load();
 				target.loadedCompletely = true;
 				trace('letsa gooo ' + target);
 				switchState(target, false, true);
+				#if !html5
 				loadMutex.release();
+				#end
 			});
 		}
 		localProg = progress;
