@@ -50,21 +50,26 @@ class LoadingBar extends MusicBeatState
 		if (!startLoad)
 		{
 			startLoad = true;
+			#if !html5
 			sys.thread.Thread.create(() ->
 			{
-				#if !html5
 				loadMutex.acquire();
-				#end
 				trace('resetti');
 				MasterObjectLoader.resetAssets();
 				target.load();
 				target.loadedCompletely = true;
 				trace('letsa gooo ' + target);
 				switchState(target, false, true);
-				#if !html5
 				loadMutex.release();
-				#end
 			});
+			#else
+			trace('resetti'); // idfk
+			MasterObjectLoader.resetAssets();
+			target.load();
+			target.loadedCompletely = true;
+			trace('letsa gooo ' + target);
+			switchState(target, false, true);
+			#end
 		}
 		localProg = progress;
 		super.update(elapsed);
