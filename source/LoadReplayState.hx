@@ -16,6 +16,8 @@ import lime.utils.Assets;
 import sys.io.File;
 #end
 
+using StringTools;
+
 class LoadReplayState extends MusicBeatState
 {
 	var selector:FlxText;
@@ -177,7 +179,7 @@ class LoadReplayState extends MusicBeatState
 
 		var rep:Replay = Replay.LoadReplay(actualNames[curSelected]);
 
-		poggerDetails.text = "Replay Details - \nDate Created: " + rep.replay.timestamp + "\nSong: " + rep.replay.songName + "\nReplay Version: " + (rep.replay.replayGameVer != Replay.version ? "OUTDATED" : "Latest");
+		poggerDetails.text = "Replay Details - \nDate Created: " + rep.replay.timestamp + "\nSong: " + rep.replay.songName + "\nReplay Version: " + (rep.replay.replayGameVer != Replay.version ? (rep.replay.replayGameVer.startsWith('1.0') ? "OUTDATED (but still playable)" : "OUTDATED") : "Latest") + (rep.replay.misses >= 0 ? ('\nReplay Misses: ' + rep.replay.misses) : '');
 
 		// selector.y = (70 * curSelected) + 30;
 

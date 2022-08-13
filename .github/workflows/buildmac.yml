@@ -38,7 +38,6 @@ jobs:
           haxelib list
       - name: Create APIStuff
         run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
-      - name: I fucking hate MacOS omg
       - name: Compile
         run: haxelib run lime build mac 
       - name: Publish Artifact

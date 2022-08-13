@@ -31,11 +31,12 @@ typedef ReplayJSON =
     public var songDiff:Int;
     public var keyPresses:Array<KeyPress>;
     public var keyReleases:Array<KeyRelease>;
+	public var misses:Int;
 }
 
 class Replay
 {
-    public static var version:String = "1.0"; // replay file version
+    public static var version:String = "1.0.1"; // replay file version
 
     public var path:String = "";
     public var replay:ReplayJSON;
@@ -47,6 +48,7 @@ class Replay
             songDiff: 1, 
             keyPresses: [],
             keyReleases: [],
+			misses: -1,
             replayGameVer: version,
             timestamp: Date.now()
         };
@@ -58,7 +60,7 @@ class Replay
 
         rep.LoadFromJSON();
 
-        trace('basic replay data:\nSong Name: ' + rep.replay.songName + '\nSong Diff: ' + rep.replay.songDiff + '\nKeys Length: ' + rep.replay.keyPresses.length);
+        trace('basic replay data:\nSong Name: ' + rep.replay.songName + '\nSong Diff: ' + rep.replay.songDiff + '\nKeys Length: ' + rep.replay.keyPresses.length + (rep.replay.misses >= 0 ? '\nMisses: ' + rep.replay.misses : ''));
 
         return rep;
     }
@@ -70,6 +72,7 @@ class Replay
             "songDiff": PlayState.storyDifficulty,
             "keyPresses": replay.keyPresses,
             "keyReleases": replay.keyReleases,
+			"misses": PlayState.misses,
             "timestamp": Date.now(),
             "replayGameVer": version
         };
