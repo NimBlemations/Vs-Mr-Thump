@@ -1,6 +1,8 @@
 package;
 
+#if !html5
 import sys.thread.Mutex;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -45,7 +47,9 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
+		#if !html5
 		MasterObjectLoader.mutex = new Mutex();
+		#end
 		#if polymod
 		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
