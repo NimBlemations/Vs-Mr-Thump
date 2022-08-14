@@ -61,7 +61,6 @@ class LoadingState extends MusicBeatState
 				else
 					checkLibrary("tutorial");
 				
-				loadingTxt.text = 'Loaded!';
 				var fadeTime = 0.5;
 				FlxG.camera.fade(FlxG.camera.bgColor, fadeTime, true);
 				new FlxTimer().start(fadeTime + MIN_TIME, function(_) introComplete());

@@ -76,11 +76,27 @@ class Replay
             "timestamp": Date.now(),
             "replayGameVer": version
         };
-
+		
+		#if sys
         var data:String = Json.stringify(json);
+		#end
 
         #if sys
         File.saveContent("assets/replays/replay-" + PlayState.SONG.song + "-time" + Date.now().getTime() + ".kadeReplay", data);
+		#else
+		if (FlxG.save.data.replays != null)
+		{
+			var replays:Array<String> = FlxG.save.data.replays;
+			crunch.push(Json.stringify(json));
+			FlxG.save.data.replays = replays;
+			trace('Added replay to existing!');
+		}
+		else
+		{
+			var data:Array<String> = [Json.stringify(json)];
+			FlxG.save.data.replays = data;
+			trace('Made replay data!');
+		}
         #end
     }
 
