@@ -68,7 +68,7 @@ class LoadReplayState extends MusicBeatState
 			actualNames[i] = string;
 			var rep:Replay = Replay.LoadReplay(string);
 			#if sys
-			var prefix:String = string.split("time");
+			var prefix:String = string.split("time")[0];
 			#else
 			var prefix:String = "replay " + rep.replay.songName; // idfk i just do things
 			#end
