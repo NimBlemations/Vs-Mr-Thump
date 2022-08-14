@@ -32,6 +32,7 @@ typedef ReplayJSON =
 	public var keyPresses:Array<KeyPress>;
 	public var keyReleases:Array<KeyRelease>;
 	public var misses:Int;
+	public var fileName:String; // Just because of HTML5 support
 }
 
 class Replay
@@ -50,13 +51,16 @@ class Replay
 			keyReleases: [],
 			misses: -1,
 			replayGameVer: version,
-			timestamp: Date.now()
+			timestamp: Date.now(),
+			fileName: "na"
 		};
 	}
 
 	public static function LoadReplay(path:String):Replay
 	{
 		var rep:Replay = new Replay(path);
+		
+		trace('KADE WHAT ARE YOU DOING WITH ' + path);
 
 		rep.LoadFromJSON();
 
@@ -74,7 +78,8 @@ class Replay
 			"keyReleases": replay.keyReleases,
 			"misses": PlayState.misses,
 			"timestamp": Date.now(),
-			"replayGameVer": version
+			"replayGameVer": version,
+			"fileName": "replay-" + PlayState.SONG.song + "-time" + Date.now().getTime()
 		};
 		
 		#if sys
@@ -82,18 +87,18 @@ class Replay
 		#end
 
 		#if sys
-		File.saveContent("assets/replays/replay-" + PlayState.SONG.song + "-time" + Date.now().getTime() + ".kadeReplay", data);
+		File.saveContent("assets/replays/" + json['fileName'] + ".kadeReplay", data);
 		#else
 		if (FlxG.save.data.replays != null)
 		{
-			var replays:Array<String> = FlxG.save.data.replays;
-			replays.push(Json.stringify(json));
-			FlxG.save.data.replays = replays;
+			var replays:Array<Dictionary> = Json.parse(FlxG.save.data.replays);
+			replays.push(json);
+			FlxG.save.data.replays = Json.stringify(replays);
 			trace('Added replay to existing!');
 		}
 		else
 		{
-			var data:Array<String> = [Json.stringify(json)];
+			var data:Array<Dictionary> = Json.stringify([json]);
 			FlxG.save.data.replays = data;
 			trace('Made replay data!');
 		}
@@ -109,6 +114,25 @@ class Replay
 		{
 			var repl:ReplayJSON = cast Json.parse(File.getContent(Sys.getCwd() + "assets\\replays\\" + path));
 			replay = repl;
+		}
+		catch(e)
+		{
+			trace('failed!\n' + e.message);
+		}
+		#else
+		trace('loading replay ' + path + '...');
+		try
+		{
+			var resultReplay:ReplayJSON; // handling this bad
+			var replays:Array<Dictionary> = Json.parse(FlxG.save.data.replays);
+			for (var i = 0; i < replays.length - 1; i++; )
+			{
+				replaySlot:ReplayJSON = replays[i];
+				if (replaySlot.fileName == path)
+					resultReplay = replaySlot;
+			}
+			if (resultReplay != null)
+				replay = resultReplay;
 		}
 		catch(e)
 		{

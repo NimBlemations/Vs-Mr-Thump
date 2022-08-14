@@ -11,7 +11,9 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import haxe.Json;
 import lime.utils.Assets;
+import Replay.ReplayJSON; // I need it
 #if sys
 import sys.io.File;
 #end
@@ -38,7 +40,14 @@ class LoadReplayState extends MusicBeatState
 		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "\\assets\\replays\\");
 		#else
 		if (FlxG.save.data.replays != null)
-			controlsStrings = FlxG.save.data.replays;
+		{
+			var replays:Array<String> = FlxG.save.data.replays;
+			for (var i = 0; i < replays.length - 1; i++)
+			{
+				var replay:ReplayJSON = Json.parse(replays[i]);
+				controlsStrings.push(replay.fileName);
+			}
+		}
 		#end
 		trace(controlsStrings);
 
@@ -59,7 +68,7 @@ class LoadReplayState extends MusicBeatState
 			var string:String = controlsStrings[i];
 			actualNames[i] = string;
 			var rep:Replay = Replay.LoadReplay(string);
-			controlsStrings[i] = string.split("time")[0] + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL");
+			controlsStrings[i] = string.split("time")[0] + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL"); // Kade, how fucking cryptic can you be
 		}
 
 		if (controlsStrings.length == 0)
