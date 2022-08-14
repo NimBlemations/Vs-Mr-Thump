@@ -87,7 +87,7 @@ class Replay
 		if (FlxG.save.data.replays != null)
 		{
 			var replays:Array<String> = FlxG.save.data.replays;
-			crunch.push(Json.stringify(json));
+			replays.push(Json.stringify(json));
 			FlxG.save.data.replays = replays;
 			trace('Added replay to existing!');
 		}
