@@ -67,7 +67,12 @@ class LoadReplayState extends MusicBeatState
 			var string:String = controlsStrings[i];
 			actualNames[i] = string;
 			var rep:Replay = Replay.LoadReplay(string);
-			controlsStrings[i] = "replay " + rep.replay.songName + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL");
+			#if sys
+			var prefix:String = string.split("time");
+			#else
+			var prefix:String = "replay " + rep.replay.songName; // idfk i just do things
+			#end
+			controlsStrings[i] = prefix + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL");
 		}
 
 		if (controlsStrings.length == 0)
@@ -147,7 +152,7 @@ class LoadReplayState extends MusicBeatState
 		super.update(elapsed);
 
 			if (controls.BACK)
-				FlxG.switchState(new OptionsMenu());
+				switchState(new OptionsMenu());
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)

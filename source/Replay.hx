@@ -62,8 +62,6 @@ class Replay
 	public static function LoadReplay(path:String):Replay
 	{
 		var rep:Replay = new Replay(path);
-		
-		trace('KADE WHAT ARE YOU DOING WITH ' + path);
 
 		rep.LoadFromJSON();
 
@@ -127,10 +125,14 @@ class Replay
 		try
 		{
 			var replays:Array<ReplayJSON> = Json.parse(FlxG.save.data.replays);
+			var prevFileName:String = ''; // THIS REPLAY SYSTEM NEEDS TO STOP FUCKING BREAKING
 			for (replaySlot in replays)
 			{
-				if (replaySlot.fileName == path)
+				if (replaySlot.fileName == path && replaySlot.fileName != prevFileName)
+				{
 					replay = replaySlot;
+					prevFileName = replaySlot.fileName;
+				}
 			}
 		}
 		catch(e)
