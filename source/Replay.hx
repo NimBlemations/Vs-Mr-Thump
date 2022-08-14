@@ -35,12 +35,15 @@ typedef ReplayJSON =
 	public var fileName:String; // Just because of HTML5 support
 }
 
+
+
 class Replay
 {
 	public static var version:String = "1.0.1"; // replay file version
 
 	public var path:String = "";
 	public var replay:ReplayJSON;
+	
 	public function new(path:String)
 	{
 		this.path = path;
@@ -87,7 +90,7 @@ class Replay
 		#end
 
 		#if sys
-		File.saveContent("assets/replays/" + json['fileName'] + ".kadeReplay", data);
+		File.saveContent("assets/replays/" + json.fileName + ".kadeReplay", data);
 		#else
 		if (FlxG.save.data.replays != null)
 		{
@@ -123,15 +126,12 @@ class Replay
 		trace('loading replay ' + path + '...');
 		try
 		{
-			var resultReplay:ReplayJSON; // handling this bad
 			var replays:Array<ReplayJSON> = Json.parse(FlxG.save.data.replays);
 			for (replaySlot in replays)
 			{
 				if (replaySlot.fileName == path)
-					resultReplay = replaySlot;
+					replay = replaySlot;
 			}
-			if (resultReplay != null)
-				replay = resultReplay;
 		}
 		catch(e)
 		{
