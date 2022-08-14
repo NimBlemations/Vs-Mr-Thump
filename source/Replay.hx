@@ -91,14 +91,14 @@ class Replay
 		#else
 		if (FlxG.save.data.replays != null)
 		{
-			var replays:Array<Dictionary> = Json.parse(FlxG.save.data.replays);
+			var replays:Array<ReplayJSON> = Json.parse(FlxG.save.data.replays);
 			replays.push(json);
 			FlxG.save.data.replays = Json.stringify(replays);
 			trace('Added replay to existing!');
 		}
 		else
 		{
-			var data:Array<Dictionary> = Json.stringify([json]);
+			var data:String = Json.stringify([json]);
 			FlxG.save.data.replays = data;
 			trace('Made replay data!');
 		}
@@ -124,7 +124,7 @@ class Replay
 		try
 		{
 			var resultReplay:ReplayJSON; // handling this bad
-			var replays:Array<Dictionary> = Json.parse(FlxG.save.data.replays);
+			var replays:Array<ReplayJSON> = Json.parse(FlxG.save.data.replays);
 			for (var i = 0; i < replays.length - 1; i++; )
 			{
 				replaySlot:ReplayJSON = replays[i];

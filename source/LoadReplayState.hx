@@ -41,7 +41,7 @@ class LoadReplayState extends MusicBeatState
 		#else
 		if (FlxG.save.data.replays != null)
 		{
-			var replays:Array<String> = FlxG.save.data.replays;
+			var replays:Array<ReplayJSON> = FlxG.save.data.replays;
 			for (var i = 0; i < replays.length - 1; i++)
 			{
 				var replay:ReplayJSON = Json.parse(replays[i]);
