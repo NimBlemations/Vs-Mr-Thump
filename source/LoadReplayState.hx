@@ -67,8 +67,7 @@ class LoadReplayState extends MusicBeatState
 			var string:String = controlsStrings[i];
 			actualNames[i] = string;
 			var rep:Replay = Replay.LoadReplay(string);
-			if (rep != null)
-				controlsStrings[i] = string.split("time")[0] + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL"); // Kade, how fucking cryptic can you be
+			controlsStrings[i] = "replay " + rep.replay.songName + " " + (rep.replay.songDiff == 2 ? "HARD" : rep.replay.songDiff == 1 ? "EASY" : "NORMAL");
 		}
 
 		if (controlsStrings.length == 0)
