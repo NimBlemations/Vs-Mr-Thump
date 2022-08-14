@@ -125,7 +125,7 @@ class Replay
 		{
 			var resultReplay:ReplayJSON; // handling this bad
 			var replays:Array<ReplayJSON> = Json.parse(FlxG.save.data.replays);
-			for (var i = 0; i < replays.length - 1; i++; )
+			for (i in 0...replays.length)
 			{
 				replaySlot:ReplayJSON = replays[i];
 				if (replaySlot.fileName == path)
