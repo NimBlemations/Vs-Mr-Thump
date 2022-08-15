@@ -1,0 +1,216 @@
+# This is a basic workflow to help you get started with Actions
+
+name: BuildAll
+
+# Controls when the action will run. 
+on: [push, pull_request]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  buildWindows:
+    runs-on: windows-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      # Runs a set of commands using the runners shell
+      - name: Install Haxelib
+        run: |
+          haxelib setup C:/haxelib
+          haxelib install lime 7.9.0
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui
+          haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons
+          haxelib install hscript
+          haxelib install newgrounds
+          haxelib run lime setup
+          haxelib install flixel-tools
+          haxelib run flixel-tools setup
+          haxelib git polymod https://github.com/larsiusprime/polymod.git
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib list
+      - name: Get malded nerd
+        run: |
+          echo cry bitch
+          echo get nerd'd
+          echo lmao
+          echo malder lmao
+          echo lmaoooooooooooooooo
+          echo fat L
+          echo fat LLLLLLLLLLLL
+          echo mald you cry baby
+          echo mald goes home
+          echo lmaoooooooooooooooooooooooooooooooooooooooooooooo
+          echo malding fr rn
+          echo you crazy?
+          echo maldin ass mf
+          echo lmaoooooooooooooo
+          echo look what the bitch detector picked up
+          echo fuckin crybaby bitch
+          echo Ok, I'm sorry, I just wanted to run this in a workflow lmao.
+        shell: cmd
+      - name: Create APIStuff
+        run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
+      - name: Compile
+        run: haxelib run lime build windows
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: windowsBuild
+          path: export/release/windows/bin
+  buildLinux:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      # Runs a set of commands using the runners shell
+      - name: wow its building how
+        run: |
+          sudo add-apt-repository ppa:haxe/releases -y
+          sudo apt-get update
+          sudo apt-get install gcc-multilib g++-multilib haxe -y
+          mkdir "%HAXELIB_ROOT%"
+          haxelib setup "%HAXELIB_ROOT%"
+          haxelib install hxcpp
+          haxelib install lime 7.9.0
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui
+          haxelib run lime setup flixel
+          haxelib run lime setup
+          haxelib install flixel-tools
+          haxelib install flixel-addons
+          haxelib install hscript
+          haxelib install newgrounds
+          haxelib git polymod https://github.com/larsiusprime/polymod.git
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib list
+          haxelib run lime build linux
+      - name: Get malded nerd
+        run: |
+          echo cry bitch
+          echo get nerd'd
+          echo lmao
+          echo malder lmao
+          echo lmaoooooooooooooooo
+          echo fat L
+          echo fat LLLLLLLLLLLL
+          echo mald you cry baby
+          echo mald goes home
+          echo lmaoooooooooooooooooooooooooooooooooooooooooooooo
+          echo malding fr rn
+          echo you crazy?
+          echo maldin ass mf
+          echo lmaoooooooooooooo
+          echo look what the bitch detector picked up
+          echo fuckin crybaby bitch
+          echo Ok, I'm sorry, I just wanted to run this in a workflow lmao.
+      - uses: actions/upload-artifact@v2
+        with:
+          name: linuxBuild
+          path: export/release/linux/bin
+  buildMac:
+    runs-on: macos-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      # Runs a set of commands using the runners shell
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
+          haxelib install lime 7.9.0
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui
+          haxelib run lime setup flixel
+          haxelib run lime setup
+          haxelib install flixel-tools
+          haxelib install flixel-addons
+          haxelib install hscript
+          haxelib install newgrounds
+          haxelib git polymod https://github.com/larsiusprime/polymod.git
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib list
+      - name: Create APIStuff
+        run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx
+      - name: Compile
+        run: haxelib run lime build mac 
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: macBuild
+          path: export/release/macos/bin
+  buildHtml:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+      # Runs a set of commands using the runners shell
+      - name: doin shit prepare
+        run: |
+          sudo add-apt-repository ppa:haxe/releases -y
+          sudo apt-get update
+          sudo apt-get install gcc-multilib g++-multilib haxe -y
+          mkdir "%HAXELIB_ROOT%"
+          haxelib setup "%HAXELIB_ROOT%"
+          haxelib install hxcpp
+          haxelib install lime 7.9.0
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui
+          haxelib run lime setup flixel
+          haxelib run lime setup
+          haxelib install flixel-tools
+          haxelib install flixel-addons
+          haxelib install hscript
+          haxelib install newgrounds
+          haxelib git polymod https://github.com/larsiusprime/polymod.git
+          haxelib list
+      - name: wow its building how
+        run: |
+          haxelib run lime build html5
+      - name: Get malded nerd
+        run: |
+          echo cry bitch
+          echo get nerd'd
+          echo lmao
+          echo malder lmao
+          echo lmaoooooooooooooooo
+          echo fat L
+          echo fat LLLLLLLLLLLL
+          echo mald you cry baby
+          echo mald goes home
+          echo lmaoooooooooooooooooooooooooooooooooooooooooooooo
+          echo malding fr rn
+          echo you crazy?
+          echo maldin ass mf
+          echo lmaoooooooooooooo
+          echo look what the bitch detector picked up
+          echo fuckin crybaby bitch
+          echo Ok, I'm sorry, I just wanted to run this in a workflow lmao.
+      - uses: actions/upload-artifact@v2
+        with:
+          name: htmlBuild
+          path: export/release/html5/bin

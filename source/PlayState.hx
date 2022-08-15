@@ -1837,7 +1837,9 @@ class PlayState extends MusicBeatState
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
-
+				
+				if (rep != null)
+					rep = null;
 				switchState(new StoryMenuState());
 
 				// if ()
@@ -1891,6 +1893,8 @@ class PlayState extends MusicBeatState
 		else
 		{
 			trace('WENT BACK TO FREEPLAY??');
+			if (rep != null)
+				rep = null;
 			switchState(new FreeplayState());
 		}
 	}
