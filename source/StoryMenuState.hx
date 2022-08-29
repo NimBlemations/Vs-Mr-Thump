@@ -70,6 +70,8 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+		super.create();
+		
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -210,8 +212,6 @@ class StoryMenuState extends MusicBeatState
 		updateText();
 
 		trace("Line 165");
-
-		super.create();
 	}
 
 	override function update(elapsed:Float)
@@ -273,7 +273,7 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			FlxG.switchState(new MainMenuState());
+			Main.switchState(new MainMenuState());
 		}
 
 		super.update(elapsed);
@@ -317,7 +317,7 @@ class StoryMenuState extends MusicBeatState
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
 			{
-				LoadingState.loadAndSwitchState(new PlayState(), true);
+				Main.switchState(new PlayState());
 			});
 		}
 	}

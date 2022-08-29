@@ -33,6 +33,8 @@ class AnimationDebug extends FlxState
 
 	override function create()
 	{
+		super.create();
+		
 		FlxG.sound.music.stop();
 
 		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
@@ -78,8 +80,6 @@ class AnimationDebug extends FlxState
 		add(camFollow);
 
 		FlxG.camera.follow(camFollow);
-
-		super.create();
 	}
 
 	function genBoyOffsets(pushList:Bool = true):Void
@@ -114,7 +114,7 @@ class AnimationDebug extends FlxState
 		textAnim.text = char.animation.curAnim.name;
 		
 		if (FlxG.keys.justPressed.ESCAPE)
-			FlxG.switchState(new PlayState());
+			Main.switchState(new PlayState());
 
 		if (FlxG.keys.justPressed.E)
 			FlxG.camera.zoom += 0.25;

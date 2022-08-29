@@ -65,7 +65,8 @@ class PlayState extends MusicBeatState
 	public static var loadRep:Bool = false;
 
 	var halloweenLevel:Bool = false;
-
+	
+	private var songMusic:FlxSound;
 	private var vocals:FlxSound;
 
 	public static var dad:Character;
@@ -163,16 +164,10 @@ class PlayState extends MusicBeatState
 	
 	// I didn't actually realize the PlayState IS the playing state!
 	
-	override public function load()
-	{
-		trace('HOG RIDAAAAAAAA');
-		LoadingBar.progress += 100;
-		
-		super.load();
-	}
-	
 	override public function create()
 	{
+		super.create();
+		
 		scrollInterchangable = false; // gotta set it back
 		scrollInterchangableMultiplier = 1.0; // gotta set it back
 		
@@ -180,8 +175,8 @@ class PlayState extends MusicBeatState
 		theFunne = FlxG.save.data.ghostTapping;
 		lightCpuStrums = FlxG.save.data.lightCpuStrums;
 		botPlay = FlxG.save.data.botPlay;
-		if (FlxG.sound.music != null)
-			FlxG.sound.music.stop();
+		if (songMusic != null)
+			songMusic.stop();
 		
 		sicks = 0;
 		bads = 0;
@@ -660,7 +655,7 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.song.toLowerCase() == 'horde')
 		{
-			boyfriend.shader = new NegativeShader();
+			boyfriend.shader = new ShearShader(2.0);
 			
 			/*
 			var filters:Array<BitmapFilter> = []; // Might be unnecessary
@@ -782,7 +777,7 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		// Add Kade Engine watermark
-		var kadeEngineWatermark = new FlxText(4,FlxG.height - 4,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - TE (" + "KE " + MainMenuState.kadeEngineVer + ")", 16);
+		var kadeEngineWatermark = new FlxText(4,FlxG.height - 4,0,SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - TE " + MainMenuState.thumpEngineVer + " (" + "KE " + MainMenuState.kadeEngineVer + ")", 16);
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
@@ -880,8 +875,6 @@ class PlayState extends MusicBeatState
 
 		if (!loadRep)
 			rep = new Replay("na");
-
-		super.create();
 	}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
@@ -1095,8 +1088,8 @@ class PlayState extends MusicBeatState
 		lastReportedPlayheadPosition = 0;
 
 		if (!paused)
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
-		FlxG.sound.music.onComplete = endSong;
+			songMusic.play();
+		songMusic.onComplete = endSong;
 		vocals.play();
 	}
 
@@ -1110,9 +1103,11 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
+		
+		songMusic = new FlxSound().loadEmbedded(Paths.inst(SONG.song), false, true);
 
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			vocals = new FlxSound().loadEmbedded(Paths.voices(SONG.song));
 		else
 			vocals = new FlxSound();
 
@@ -1317,9 +1312,9 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (FlxG.sound.music != null)
+			if (songMusic != null)
 			{
-				FlxG.sound.music.pause();
+				songMusic.pause();
 				vocals.pause();
 			}
 
@@ -1334,7 +1329,7 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (FlxG.sound.music != null && !startingSong)
+			if (songMusic != null && !startingSong)
 			{
 				resyncVocals();
 			}
@@ -1351,8 +1346,8 @@ class PlayState extends MusicBeatState
 	{
 		vocals.pause();
 
-		FlxG.sound.music.play();
-		Conductor.songPosition = FlxG.sound.music.time;
+		songMusic.play();
+		Conductor.songPosition = songMusic.time;
 		vocals.time = Conductor.songPosition;
 		vocals.play();
 	}
@@ -1423,7 +1418,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.random.bool(0.1))
 			{
 				// gitaroo man easter egg
-				switchState(new GitarooPause());
+				Main.switchState(new GitarooPause());
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1431,7 +1426,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			switchState(new ChartingState());
+			Main.switchState(new ChartingState());
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -1466,7 +1461,7 @@ class PlayState extends MusicBeatState
 
 		#if debug
 		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new AnimationDebug(SONG.player2));
+			Main.switchState(new AnimationDebug(SONG.player2));
 		#end
 
 		if (startingSong)
@@ -1628,7 +1623,7 @@ class PlayState extends MusicBeatState
 			paused = true;
 
 			vocals.stop();
-			FlxG.sound.music.stop();
+			songMusic.stop();
 
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 
@@ -1765,9 +1760,10 @@ class PlayState extends MusicBeatState
 						}
 						else
 						{
-							health -= 0.075;
+							if (!daNote.isBotNote)
+								health -= 0.075;
 							vocals.volume = 0;
-							noteMiss(daNote.noteData);
+							noteMiss(daNote.noteData, !daNote.isBotNote);
 						}
 	
 						daNote.active = false;
@@ -1816,7 +1812,7 @@ class PlayState extends MusicBeatState
 			loadRep = false;
 
 		canPause = false;
-		FlxG.sound.music.volume = 0;
+		songMusic.volume = 0;
 		vocals.volume = 0;
 		if (SONG.validScore && !botPlay) // !botPlay is prob not needed here, buuuut....
 		{
@@ -1840,7 +1836,7 @@ class PlayState extends MusicBeatState
 				
 				if (rep != null)
 					rep = null;
-				switchState(new StoryMenuState());
+				Main.switchState(new StoryMenuState());
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -1885,7 +1881,7 @@ class PlayState extends MusicBeatState
 				prevCamFollow = camFollow;
 
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
-				FlxG.sound.music.stop();
+				songMusic.stop();
 
 				LoadingState.loadAndSwitchState(new PlayState());
 			}
@@ -1895,7 +1891,7 @@ class PlayState extends MusicBeatState
 			trace('WENT BACK TO FREEPLAY??');
 			if (rep != null)
 				rep = null;
-			switchState(new FreeplayState());
+			Main.switchState(new FreeplayState());
 		}
 	}
 
@@ -2406,24 +2402,27 @@ class PlayState extends MusicBeatState
 			});
 	}
 
-	function noteMiss(direction:Int = 1):Void
+	function noteMiss(direction:Int = 1, ?hurt:Bool = true):Void
 	{
 		if (!boyfriend.stunned)
 		{
-			health -= 0.04;
+			if (hurt)
+				health -= 0.04;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');
 			}
 			combo = 0;
-			misses++;
-
-			songScore -= 10;
-
+			if (hurt)
+				misses++;
+			
+			if (hurt)
+				songScore -= 10;
+			
 			FlxG.sound.play(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
 			// FlxG.sound.play(Paths.sound('missnote1'), 1, false);
 			// FlxG.log.add('played imss note');
-
+			
 			switch (direction)
 			{
 				case 0:
@@ -2656,7 +2655,7 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
+		if (songMusic.time > Conductor.songPosition + 20 || songMusic.time < Conductor.songPosition - 20)
 		{
 			resyncVocals();
 		}

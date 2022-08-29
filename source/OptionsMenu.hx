@@ -24,6 +24,8 @@ class OptionsMenu extends MusicBeatState
 	var versionShit:FlxText;
 	override function create()
 	{
+		super.create();
+		
 		if (FlxG.save.data.botPlay == null)
 			FlxG.save.data.botPlay = false;
 		
@@ -68,8 +70,6 @@ class OptionsMenu extends MusicBeatState
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-
-		super.create();
 	}
 
 	override function update(elapsed:Float)
@@ -77,7 +77,7 @@ class OptionsMenu extends MusicBeatState
 		super.update(elapsed);
 
 			if (controls.BACK)
-				switchState(new MainMenuState());
+				Main.switchState(new MainMenuState());
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)
@@ -139,7 +139,7 @@ class OptionsMenu extends MusicBeatState
 						grpControls.add(ctrl);
 					case 5:
 						trace('switch');
-						switchState(new LoadReplayState());
+						Main.switchState(new LoadReplayState());
 				}
 			}
 	}

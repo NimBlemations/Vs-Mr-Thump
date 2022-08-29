@@ -122,6 +122,33 @@ class NegativeShader extends FlxShader
 		}
 }
 
+class ShearShader extends FlxShader
+{
+	@:glVertexSource('
+		#pragma header
+		
+		uniform float shearAmount = 0;
+		
+		void main() {
+			openfl_TextureCoordv = openfl_TextureCoord;
+			
+			if (openfl_HasColorTransform) {
+				openfl_ColorMultiplierv = openfl_ColorMultiplier;
+				openfl_ColorOffsetv = openfl_ColorOffset / 255.0;
+			}
+			
+			newMatrix = vec4(openfl_Matrix[0] * sin(shearAmount * openfl_Matrix[0]), openfl_Matrix[1], openfl_Matrix[2], openfl_Matrix[3])
+			
+			gl_Position = newMatrix * openfl_Position;
+		}')
+		
+			public function new(shearAmount:Float = 0)
+			{
+				super();
+				this.shearAmount.value = [shearAmount];
+			}
+}
+
 class BrokenGlassShader extends FlxShader
 {
 	@:glFragmentSource('

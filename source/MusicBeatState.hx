@@ -32,6 +32,9 @@ class MusicBeatState extends FlxUIState
 
 	override function create()
 	{
+		Paths.clearStoredMemory();
+		if ((!Std.isOfType(this, PlayState)) && (!Std.isOfType(this, ChartingState)))
+			Paths.clearUnusedMemory();
 		/*
 		Application.current.window.onFocusIn.add(onWindowFocusIn);
 		Application.current.window.onFocusOut.add(onWindowFocusOut);
@@ -55,88 +58,6 @@ class MusicBeatState extends FlxUIState
 		super.destroy();
 	}
 	*/
-	
-	override function remove(Object:flixel.FlxBasic, Splice:Bool = false):flixel.FlxBasic
-	{
-		MasterObjectLoader.removeObject(Object);
-		var result = super.remove(Object, Splice);
-		return result;
-	}
-
-	override function add(Object:flixel.FlxBasic):flixel.FlxBasic
-	{
-		if (Std.isOfType(Object, FlxUI))
-			return null;
-
-		if (Std.isOfType(Object, FlxSprite))
-		{
-			var spr:FlxSprite = cast(Object, FlxSprite);
-			if (spr.graphic != null)
-			{
-				if (spr.graphic.bitmap.image == null)
-					trace('Oh god a null texture oh shit');
-			}
-		}
-		// Debug.logTrace(Object);
-		MasterObjectLoader.addObject(Object);
-
-		var result = super.add(Object);
-		return result;
-	}
-	
-	public function switchState(nextState:MusicBeatState, goToLoading:Bool = true, trans:Bool = true)
-	{
-		if (preventNoob)
-			return;
-		preventNoob = true;
-		trace('SWITCHING STATE');
-		if (trans)
-		{
-			transitionOut(function()
-			{
-				lastState = this;
-				if (goToLoading)
-				{
-					var state:FlxState = new LoadingBar(nextState);
-					
-					@:privateAccess
-					FlxG.game._requestedState = state;
-				}
-				else
-				{
-					@:privateAccess
-					FlxG.game._requestedState = nextState;
-				}
-				trace('SWITCHED STATE!');
-			});
-		}
-		else
-		{
-			lastState = this;
-			if (goToLoading)
-			{
-				var state:FlxState = new LoadingBar(nextState);
-				
-				@:privateAccess
-				FlxG.game._requestedState = state;
-			}
-			else
-			{
-				@:privateAccess
-				FlxG.game._requestedState = nextState;
-			}
-			trace('SWITCHED STATE!');
-		}
-	}
-	
-	var loadedCompletely:Bool = false;
-
-	public function load()
-	{
-		loadedCompletely = true;
-
-		trace('STATE LOADED');
-	}
 
 	override function update(elapsed:Float)
 	{

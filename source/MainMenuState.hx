@@ -34,20 +34,16 @@ class MainMenuState extends MusicBeatState
 	var newInput:Bool = true;
 
 	public static var kadeEngineVer:String = "1.1.3";
+	public static var thumpEngineVer:String = "0.1.3";
 	public static var gameVer:String = "0.2.7.1";
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-	
-	override function load()
-	{
-		trace('OMEGA BALLS');
-		
-		super.load();
-	}
 
 	override function create()
 	{
+		super.create();
+		
 		if (!FlxG.sound.music.playing)
 		{
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
@@ -100,7 +96,7 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollow, null, 0.06);
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + " FNF - " + 'Thump Engine (' + kadeEngineVer + " Kade Engine" + ')', 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + " FNF - " + 'Thump Engine ' + thumpEngineVer + ' (' + kadeEngineVer + " Kade Engine" + ')', 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -109,8 +105,6 @@ class MainMenuState extends MusicBeatState
 
 
 		changeItem();
-
-		super.create();
 	}
 
 	var selectedSomethin:Bool = false;
@@ -138,7 +132,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				switchState(new TitleState());
+				Main.switchState(new TitleState());
 			}
 
 			if (controls.ACCEPT)
@@ -179,15 +173,15 @@ class MainMenuState extends MusicBeatState
 								switch (daChoice)
 								{
 									case 'story mode':
-										switchState(new StoryMenuState());
+										Main.switchState(new StoryMenuState());
 										trace("Story Menu Selected");
 									case 'freeplay':
-										switchState(new FreeplayState());
+										Main.switchState(new FreeplayState());
 
 										trace("Freeplay Menu Selected");
 
 									case 'options':
-										switchState(new OptionsMenu());
+										Main.switchState(new OptionsMenu());
 								}
 							});
 						}

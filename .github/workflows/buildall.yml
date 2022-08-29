@@ -33,7 +33,6 @@ jobs:
           haxelib install flixel-tools
           haxelib run flixel-tools setup
           haxelib git polymod https://github.com/larsiusprime/polymod.git
-          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
       - name: Get malded nerd
         run: |
@@ -94,7 +93,6 @@ jobs:
           haxelib install hscript
           haxelib install newgrounds
           haxelib git polymod https://github.com/larsiusprime/polymod.git
-          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
           haxelib run lime build linux
       - name: Get malded nerd
@@ -146,7 +144,6 @@ jobs:
           haxelib install hscript
           haxelib install newgrounds
           haxelib git polymod https://github.com/larsiusprime/polymod.git
-          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
           haxelib list
       - name: Create APIStuff
         run: echo "package;class APIStuff{public static var API:String = '';public static var EncKey:String = '';}" > source/APIStuff.hx

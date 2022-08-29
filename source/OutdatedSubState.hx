@@ -13,13 +13,6 @@ class OutdatedSubState extends MusicBeatState
 
 	public static var needVer:String = "IDFK LOL";
 	
-	override function load()
-	{
-		trace('bruh lmao');
-		
-		super.load();
-	}
-	
 	override function create()
 	{
 		super.create();
@@ -45,11 +38,11 @@ class OutdatedSubState extends MusicBeatState
 			txt.screenCenter();
 			add(txt);
 			leftState = true;
-			switchState(new MainMenuState());
+			Main.switchState(new MainMenuState());
 		}
 		if (controls.BACK)
 		{
-			var randomNumeral:Int = Std.random(5);
+			var randomNumeral:Int = Std.random(6);
 			var txtInsert:String = '';
 			// This is a weird spot lmao
 			switch (randomNumeral)
@@ -66,13 +59,15 @@ class OutdatedSubState extends MusicBeatState
 					txtInsert = 'hoodini';
 				case 5:
 					txtInsert = 'mcdonlad brugr';
+				case 6:
+					txtInsert = 'the are the when of';
 			}
 			var txt:FlxText = new FlxText(0, 0, FlxG.width, txtInsert, 32);
 			txt.setFormat("VCR OSD Mono", 32, FlxColor.GREEN, CENTER);
 			txt.screenCenter();
 			add(txt);
 			leftState = true;
-			switchState(new MainMenuState());
+			Main.switchState(new MainMenuState());
 		}
 		super.update(elapsed);
 	}

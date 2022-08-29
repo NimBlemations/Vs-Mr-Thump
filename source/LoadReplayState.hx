@@ -35,6 +35,8 @@ class LoadReplayState extends MusicBeatState
 	var poggerDetails:FlxText;
 	override function create()
 	{
+		super.create();
+		
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		#if sys
 		controlsStrings = sys.FileSystem.readDirectory(Sys.getCwd() + "\\assets\\replays\\");
@@ -110,8 +112,6 @@ class LoadReplayState extends MusicBeatState
 		add(poggerDetails);
 
 		changeSelection(0);
-
-		super.create();
 	}
 
 	public function getWeekNumbFromSong(songName:String):Int
@@ -152,7 +152,7 @@ class LoadReplayState extends MusicBeatState
 		super.update(elapsed);
 
 			if (controls.BACK)
-				switchState(new OptionsMenu());
+				Main.switchState(new OptionsMenu());
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)
@@ -172,7 +172,7 @@ class LoadReplayState extends MusicBeatState
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = PlayState.rep.replay.songDiff;
 				PlayState.storyWeek = getWeekNumbFromSong(PlayState.rep.replay.songName);
-				LoadingState.loadAndSwitchState(new PlayState());
+				Main.switchState(new PlayState());
 			}
 	}
 

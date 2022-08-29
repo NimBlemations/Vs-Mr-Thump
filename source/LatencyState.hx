@@ -14,6 +14,8 @@ class LatencyState extends FlxState
 
 	override function create()
 	{
+		super.create();
+		
 		FlxG.sound.playMusic(Paths.sound('soundTest'));
 
 		noteGrp = new FlxTypedGroup<Note>();
@@ -33,8 +35,6 @@ class LatencyState extends FlxState
 		add(strumLine);
 
 		Conductor.changeBPM(120);
-
-		super.create();
 	}
 
 	override function update(elapsed:Float)

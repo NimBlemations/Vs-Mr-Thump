@@ -1,8 +1,5 @@
 package;
 
-#if !html5
-import sys.thread.Mutex;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -47,9 +44,6 @@ class TitleState extends MusicBeatState
 
 	override public function create():Void
 	{
-		#if !html5
-		MasterObjectLoader.mutex = new Mutex();
-		#end
 		#if polymod
 		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
@@ -61,11 +55,11 @@ class TitleState extends MusicBeatState
 
 		PlayerSettings.init();
 
+		super.create();
+		
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		// DEBUG BULLSHIT
-
-		super.create();
 
 		// NGio.noLogin(APIStuff.API);
 
@@ -93,9 +87,9 @@ class TitleState extends MusicBeatState
 		}
 
 		#if FREEPLAY
-		switchState(new FreeplayState());
+		Main.switchState(new FreeplayState());
 		#elseif CHARTING
-		switchState(new ChartingState());
+		Main.switchState(new ChartingState());
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -300,17 +294,17 @@ class TitleState extends MusicBeatState
 					{
 						trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
 						OutdatedSubState.needVer = data;
-						switchState(new OutdatedSubState());
+						Main.switchState(new OutdatedSubState());
 					}
 					else
 					{
-						switchState(new MainMenuState());
+						Main.switchState(new MainMenuState());
 					}
 				}
 				
 				http.onError = function (error) {
 					trace('error: $error');
-					switchState(new MainMenuState()); // fail but we go anyway
+					Main.switchState(new MainMenuState()); // fail but we go anyway
 				}
 				
 				http.request();
