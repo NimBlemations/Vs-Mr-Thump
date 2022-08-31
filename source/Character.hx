@@ -36,7 +36,7 @@ class Character extends FNFSprite
 		{
 			case 'gf':
 				// GIRLFRIEND CODE
-				tex = Paths.getSparrowAtlas('GF_assets');
+				tex = Paths.getSparrowAtlas('GF_assets', null, true);
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -263,7 +263,7 @@ class Character extends FNFSprite
 				flipX = true;
 
 			case 'bf':
-				var tex = Paths.getSparrowAtlas('BOYFRIEND');
+				var tex = Paths.getSparrowAtlas('BOYFRIEND', null, true);
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -597,12 +597,15 @@ class Character extends FNFSprite
 					holdTimer = 0;
 				}
 			}
-
-			switch (curCharacter)
+			
+			if (animation.curAnim != null)
 			{
-				case 'gf':
-					if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-						playAnim('danceRight');
+				switch (curCharacter)
+				{
+					case 'gf':
+						if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+							playAnim('danceRight');
+				}
 			}
 		}
 

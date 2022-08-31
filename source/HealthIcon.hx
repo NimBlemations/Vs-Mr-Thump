@@ -1,6 +1,10 @@
 package;
 
 import flixel.FlxSprite;
+import openfl.utils.Assets as OpenFlAssets;
+#if sys
+import sys.FileSystem;
+#end
 
 class HealthIcon extends FlxSprite
 {
@@ -11,25 +15,35 @@ class HealthIcon extends FlxSprite
 	
 	public var characterTxt:String = 'bf';
 	
-	public var composition:Int = 0; // Either the defeat icon and the idle icon, or more!
+	public var composition:Int = 1; // Either the defeat icon and the idle icon, or more!
 
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		// Tbh shout out to Forever Engine
 		characterTxt = char;
+		var splitter:Array<String> = characterTxt.split('-');
+		var split = splitter[0];
 		super();
-		loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
-		if (this.frames == null)
+		try
 		{
-			var splitter:Array<String> = characterTxt.split('-');
-			characterTxt = splitter[0];
-			loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
+			if (FileSystem.exists(Paths.getPath('images/icons/icon-' + characterTxt + '.png', IMAGE, null)))
+				loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
+			else if (FileSystem.exists(Paths.getPath('images/icons/icon-' + split + '.png', IMAGE, null)))
+				loadGraphic(Paths.image('icons/icon-' + split), true, 150, 150);
+			else
+				loadGraphic(Paths.image('icons/icon-face'), true, 150, 150);
+		} catch (e) {
+			trace('No actually what the fuck man ($e)');
 		}
-		if (this.frames == null)
-			loadGraphic(Paths.image('icons/icon-face'), true, 150, 150);
+		
+		var tempArray:Array<Int> = [];
+		for (i in 0...composition)
+		{
+			tempArray.push(i);
+		}
 
 		antialiasing = true;
-		animation.add(characterTxt, [0, 1], 0, false, isPlayer);
+		animation.add(characterTxt, tempArray, 0, false, isPlayer);
 		animation.play(characterTxt);
 		scrollFactor.set();
 	}

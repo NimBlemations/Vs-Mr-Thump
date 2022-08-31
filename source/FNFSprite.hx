@@ -39,7 +39,7 @@ class FNFSprite extends FlxSprite // hm looks like i stole this from you yoshubs
 	}
 
 	override public function loadGraphic(Graphic:FlxGraphicAsset, Animated:Bool = false, Width:Int = 0, Height:Int = 0, Unique:Bool = false,
-			?Key:String):FNFSprite
+			?Key:String):FNFSprite // Ok fine, I only got the FNFSprite.hx probably because of this function.
 	{
 		var graph:FlxGraphic = (FlxG.bitmap.add(Graphic, Unique, Key));
 		if (graph == null)

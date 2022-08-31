@@ -10,8 +10,10 @@ import openfl.media.Sound;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 import openfl.system.System;
+#if sys
 import sys.FileSystem;
 import sys.io.File;
+#end
 
 class Paths
 {
@@ -156,14 +158,16 @@ class Paths
 		return currentTrackedSounds.get(gottenPath);
 	}
 
-	static function getPath(file:String, type:AssetType, library:Null<String>)
+	public static function getPath(file:String, type:AssetType, ?library:Null<String>)
 	{
+		setCurrentLevel('week' + PlayState.storyWeek);
+		
 		if (library != null)
 			return getLibraryPath(file, library);
 
 		if (currentLevel != null)
 		{
-			var levelPath = getLibraryPathForce(file, currentLevel);
+			var levelPath = getLibraryPathForce(file, currentLevel); // why the fuck this not work why
 			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 
@@ -182,7 +186,7 @@ class Paths
 
 	inline static function getLibraryPathForce(file:String, library:String)
 	{
-		return '$library:assets/$library/$file';
+		return 'assets/$library/$file';
 	}
 
 	inline static function getPreloadPath(file:String)
@@ -242,7 +246,7 @@ class Paths
 		return returnSound('songs:assets/songs/${song.toLowerCase()}', 'Inst');
 	}
 
-	inline static public function image(key:String, ?library:String, ?textureCompression:Bool = false)
+	inline static public function image(key:String, ?library:String, ?textureCompression:Bool = false):FlxGraphic
 	{
 		var returnAsset:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return returnAsset;
@@ -253,9 +257,9 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
-	inline static public function getSparrowAtlas(key:String, ?library:String)
+	inline static public function getSparrowAtlas(key:String, ?library:String, ?textureCompression:Bool = false)
 	{
-		var graphic:FlxGraphic = returnGraphic(key, library);
+		var graphic:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return (FlxAtlasFrames.fromSparrow(graphic, File.getContent(file('images/$key.xml', library))));
 	}
 
