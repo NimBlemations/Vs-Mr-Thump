@@ -167,7 +167,7 @@ class Paths
 
 		if (currentLevel != null)
 		{
-			var levelPath = getLibraryPathForce(file, currentLevel); // why the fuck this not work why
+			var levelPath = getLibraryPathForce(file, currentLevel);
 			if (OpenFlAssets.exists(levelPath, type))
 				return levelPath;
 
@@ -246,7 +246,7 @@ class Paths
 		return returnSound('songs:assets/songs/${song.toLowerCase()}', 'Inst');
 	}
 
-	inline static public function image(key:String, ?library:String, ?textureCompression:Bool = false):FlxGraphic
+	inline static public function image(key:String, ?library:String, ?textureCompression:Bool = true):FlxGraphic
 	{
 		var returnAsset:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return returnAsset;
@@ -257,7 +257,7 @@ class Paths
 		return 'assets/fonts/$key';
 	}
 
-	inline static public function getSparrowAtlas(key:String, ?library:String, ?textureCompression:Bool = false)
+	inline static public function getSparrowAtlas(key:String, ?library:String, ?textureCompression:Bool = true)
 	{
 		var graphic:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return (FlxAtlasFrames.fromSparrow(graphic, File.getContent(file('images/$key.xml', library))));

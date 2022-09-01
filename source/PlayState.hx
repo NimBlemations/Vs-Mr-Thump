@@ -2030,7 +2030,6 @@ class PlayState extends MusicBeatState
 			seperatedScore.push(Math.floor((combo - (seperatedScore[0] * 100)) / 10));
 			seperatedScore.push(combo % 10);
 			
-			#if !debug
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
 			{
@@ -2067,7 +2066,6 @@ class PlayState extends MusicBeatState
 	
 				daLoop++;
 			}
-			#end
 			/* 
 				trace(combo);
 				trace(seperatedScore);

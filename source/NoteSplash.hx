@@ -5,16 +5,12 @@ import flixel.graphics.frames.FlxAtlasFrames;
 
 class NoteSplash extends FlxSprite
 {
-	static var splashFrames:FlxAtlasFrames;
 	
 	public function new(noteData:Int) 
 	{
 		super();
 		
-		if (splashFrames == null)
-			splashFrames = Paths.getSparrowAtlas('noteSplashes'); // tbh i don't think it will load faster
-		
-		frames = splashFrames;
+		frames = Paths.getSparrowAtlas('noteSplashes');
 		
 		animation.addByPrefix('splatP1', 'note impact 1 purple0', 24, false);
 		animation.addByPrefix('splatB1', 'note impact 1  blue0', 24, false);
