@@ -20,6 +20,7 @@ class Note extends FlxSprite
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
+	public var sickChanced:Bool = false;
 	public var prevNote:Note;
 
 	public var sustainLength:Float = 0;
@@ -208,6 +209,9 @@ class Note extends FlxSprite
 			if (alpha > 0.3)
 				alpha = 0.3;
 		}
+		
+		if (strumTime <= Conductor.songPosition)
+			sickChanced = true;
 		
 		if (PlayState.scrollInterchangable)
 		{

@@ -3,6 +3,7 @@ package;
 import flash.filters.BitmapFilter;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.tile.FlxGraphicsShader;
 import flixel.graphics.frames.FlxFilterFrames;
 import flixel.system.FlxAssets.FlxShader;
 
@@ -122,15 +123,8 @@ class NegativeShader extends FlxShader
 		}
 }
 
-class ShearShader extends FlxShader
+class ShearShader extends FlxGraphicsShader
 {
-	@:glFragmentSource('
-		#pragma header
-		
-		void main() {
-			gl_FragColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
-		}')
-	
 	@:glVertexSource('
 		#pragma header
 		

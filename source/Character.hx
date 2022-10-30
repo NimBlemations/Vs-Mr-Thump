@@ -8,12 +8,14 @@ import flixel.util.FlxColor;
 
 using StringTools;
 
-class Character extends FNFSprite
+class Character extends FlxSprite
 {
 	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
+	
+	public var animOffsets:Map<String, Array<Dynamic>>;
 	
 	public var barColor:FlxColor = 0x00000000;
 
@@ -392,7 +394,7 @@ class Character extends FNFSprite
 
 				antialiasing = false;
 				
-				barColor = 0xFF31b0d1;
+				barColor = 0xFF7bd6f6;
 
 				flipX = true;
 			case 'bf-pixel-dead':
@@ -413,7 +415,7 @@ class Character extends FNFSprite
 				antialiasing = false;
 				flipX = true;
 				
-				barColor = 0xFF31b0d1;
+				barColor = 0xFF7bd6f6;
 			
 			case 'thump':
 				frames = Paths.getSparrowAtlas('THUMP');
@@ -613,6 +615,11 @@ class Character extends FNFSprite
 	}
 
 	private var danced:Bool = false;
+	
+	public function addOffset(name:String, x:Float = 0, y:Float = 0)
+	{
+		animOffsets[name] = [x, y];
+	}
 
 	/**
 	 * FOR GF DANCING SHIT
@@ -647,9 +654,17 @@ class Character extends FNFSprite
 		}
 	}
 
-	override public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		super.playAnim(AnimName, Force, Reversed, Frame);
+		animation.play(AnimName, Force, Reversed, Frame);
+
+		var daOffset = animOffsets.get(AnimName);
+		if (animOffsets.exists(AnimName))
+		{
+			offset.set(daOffset[0], daOffset[1]);
+		}
+		else
+			offset.set(0, 0);
 
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))

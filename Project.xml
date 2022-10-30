@@ -114,7 +114,7 @@
 
 	<!--In case you want to use the ui package-->
 	<haxelib name="flixel-ui" />
-	<haxelib name="newgrounds" unless="neko"/>
+	<!-- <haxelib name="newgrounds" unless="neko"/> -->
 	<haxelib name="faxe" if='switch'/>
 	<!-- <haxelib name="polymod"/> Polymod doesn't work >:( -->
 	<!-- <haxelib name="hxcpp-debug-server" if="desktop"/> -->

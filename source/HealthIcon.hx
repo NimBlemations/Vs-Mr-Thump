@@ -1,9 +1,10 @@
 package;
 
 import flixel.FlxSprite;
-import openfl.utils.Assets as OpenFlAssets;
 #if sys
 import sys.FileSystem;
+#else
+import openfl.utils.Assets as FileSystem; // I am cheating lol
 #end
 
 class HealthIcon extends FlxSprite
