@@ -149,6 +149,7 @@ class PlayState extends MusicBeatState
 	public static var botPlay:Bool = false;
 	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
+	var songLength:Float = 0;
 	public static var repPresses:Int = 0;
 	public static var repReleases:Int = 0;
 
@@ -170,6 +171,8 @@ class PlayState extends MusicBeatState
 		
 		scrollInterchangable = false; // gotta set it back
 		scrollInterchangableMultiplier = 1.0; // gotta set it back
+		
+		Paths.setCurrentLevel('week' + storyWeek); // Might've lost this
 		
 		instance = this;
 		theFunne = FlxG.save.data.ghostTapping;
@@ -1092,8 +1095,9 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 			songMusic.play();
-		songMusic.onComplete = endSong;
 		vocals.play();
+		
+		songLength = songMusic.length;
 	}
 
 	var debugNum:Int = 0;
@@ -1347,13 +1351,30 @@ class PlayState extends MusicBeatState
 
 	function resyncVocals():Void
 	{
-		vocals.pause();
-
-		songMusic.pause();
-		songMusic.time = Conductor.songPosition;
-		vocals.time = Conductor.songPosition;
-		songMusic.play();
-		vocals.play();
+		if (!_exiting)
+		{
+			if (!paused)
+			{
+				#if debug
+				trace('resync to ${Conductor.songPosition - Conductor.offset} (${Conductor.offset}) (${(Conductor.songPosition - Conductor.offset) - vocals.time})');
+				#end
+				songMusic.pause();
+				songMusic.time = Math.round(Conductor.songPosition - Conductor.offset); // Smooth n' stuff!
+				
+				vocals.pause();
+				songMusic.play();
+				vocals.time = Math.round(Conductor.songPosition - Conductor.offset);
+				vocals.play();
+			}
+			else
+			{
+				songMusic.time = Math.round(Conductor.songPosition - Conductor.offset);
+				
+				songMusic.play();
+				vocals.time = Math.round(Conductor.songPosition - Conductor.offset);
+				vocals.play();
+			}
+		}
 	}
 
 	private var paused:Bool = false;
@@ -1422,7 +1443,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.random.bool(0.1))
 			{
 				// gitaroo man easter egg
-				Main.switchState(new GitarooPause());
+				FlxG.switchState(new GitarooPause());
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1430,7 +1451,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			Main.switchState(new ChartingState());
+			FlxG.switchState(new ChartingState());
 		}
 
 		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
@@ -1468,7 +1489,7 @@ class PlayState extends MusicBeatState
 
 		#if debug
 		if (FlxG.keys.justPressed.EIGHT)
-			Main.switchState(new AnimationDebug(SONG.player2));
+			FlxG.switchState(new AnimationDebug(SONG.player2));
 		#end
 
 		if (startingSong)
@@ -1498,6 +1519,13 @@ class PlayState extends MusicBeatState
 					// Conductor.songPosition += FlxG.elapsed * 1000;
 					// trace('MISSED FRAME');
 				}
+			}
+			
+			if (Conductor.songPosition >= songLength && !endingSong)
+			{
+				songMusic.stop();
+				endingSong = true;
+				endSong();
 			}
 
 			// Conductor.lastSongPos = FlxG.sound.music.time;
@@ -1850,7 +1878,7 @@ class PlayState extends MusicBeatState
 				
 				if (rep != null)
 					rep = null;
-				Main.switchState(new StoryMenuState());
+				FlxG.switchState(new StoryMenuState());
 
 				// if ()
 				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
@@ -1897,7 +1925,7 @@ class PlayState extends MusicBeatState
 				PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
 				songMusic.stop();
 
-				Main.switchState(new PlayState());
+				FlxG.switchState(new PlayState());
 			}
 		}
 		else
@@ -1905,7 +1933,7 @@ class PlayState extends MusicBeatState
 			trace('WENT BACK TO FREEPLAY??');
 			if (rep != null)
 				rep = null;
-			Main.switchState(new FreeplayState());
+			FlxG.switchState(new FreeplayState());
 		}
 	}
 
@@ -2514,6 +2542,7 @@ class PlayState extends MusicBeatState
 			{
 				if (!note.wasGoodHit)
 				{
+					boyfriend.holdTimer = 0;
 					if (!note.isSustainNote && !note.isBotNote && !botPlay)
 					{
 						popUpScore(note.strumTime);
@@ -2536,8 +2565,8 @@ class PlayState extends MusicBeatState
 						{
 							if (Math.abs(note.noteData) == spr.ID)
 							{
-								noteSplash.x = (spr.x - spr.width) + spr.width / 4;
-								noteSplash.y = (spr.y - spr.height) + spr.height / 4;
+								noteSplash.x = (spr.x - spr.width) + spr.width;
+								noteSplash.y = (spr.y - spr.height) + spr.height;
 							}
 						});
 						new FlxTimer().start(0.2, function(tmr:FlxTimer)
@@ -2669,7 +2698,8 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (songMusic.time >= Conductor.songPosition + 20 || songMusic.time <= Conductor.songPosition - 20)
+		if (Math.abs((Conductor.songPosition - Conductor.offset) - songMusic.time) > 20
+			|| (SONG.needsVoices && Math.abs((Conductor.songPosition - Conductor.offset) - vocals.time) > 20))
 			resyncVocals();
 
 		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)

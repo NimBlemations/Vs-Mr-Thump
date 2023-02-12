@@ -195,7 +195,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			Main.switchState(new MainMenuState());
+			FlxG.switchState(new MainMenuState());
 		}
 
 		if (accepted)
@@ -210,7 +210,7 @@ class FreeplayState extends MusicBeatState
 
 			PlayState.storyWeek = songs[curSelected].week;
 			trace('CUR WEEK' + PlayState.storyWeek);
-			Main.switchState(new PlayState());
+			FlxG.switchState(new PlayState());
 		}
 	}
 

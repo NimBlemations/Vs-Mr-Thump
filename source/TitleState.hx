@@ -58,6 +58,8 @@ class TitleState extends MusicBeatState
 		super.create();
 		
 		curWacky = FlxG.random.getObject(getIntroTextShit());
+		
+		Paths.setCurrentLevel('deez nuts'); // NO WAY THIS SHIT FIXED THE WHOLE FUCKING THING I SHOULD RAGE RN
 
 		// DEBUG BULLSHIT
 
@@ -87,9 +89,9 @@ class TitleState extends MusicBeatState
 		}
 
 		#if FREEPLAY
-		Main.switchState(new FreeplayState());
+		FlxG.switchState(new FreeplayState());
 		#elseif CHARTING
-		Main.switchState(new ChartingState());
+		FlxG.switchState(new ChartingState());
 		#else
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
@@ -294,17 +296,17 @@ class TitleState extends MusicBeatState
 					{
 						trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
 						OutdatedSubState.needVer = data;
-						Main.switchState(new OutdatedSubState());
+						FlxG.switchState(new OutdatedSubState());
 					}
 					else
 					{
-						Main.switchState(new MainMenuState());
+						FlxG.switchState(new MainMenuState());
 					}
 				}
 				
 				http.onError = function (error) {
 					trace('error: $error');
-					Main.switchState(new MainMenuState()); // fail but we go anyway
+					FlxG.switchState(new MainMenuState()); // fail but we go anyway
 				}
 				
 				http.request();

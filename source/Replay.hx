@@ -103,6 +103,7 @@ class Replay
 			FlxG.save.data.replays = data;
 			trace('Made replay data!');
 		}
+		FlxG.save.flush();
 		#end
 	}
 

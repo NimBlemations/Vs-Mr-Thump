@@ -116,7 +116,7 @@ class LoadingState extends MusicBeatState
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		
-		Main.switchState(target);
+		FlxG.switchState(target);
 	}
 	
 	static function getSongPath()
@@ -131,7 +131,7 @@ class LoadingState extends MusicBeatState
 	
 	inline static public function loadAndSwitchState(target:MusicBeatState, stopMusic = false)
 	{
-		Main.switchState(getNextState(target, stopMusic));
+	FlxG.switchStatee(getNextState(target, stopMusic));
 	}
 	
 	static function getNextState(target:MusicBeatState, stopMusic = false):MusicBeatState

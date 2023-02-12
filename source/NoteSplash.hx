@@ -24,6 +24,9 @@ class NoteSplash extends FlxSprite
 		animation.addByPrefix('note3-1', 'note impact 2 red', 24, false);
 		
 		animation.play('note' + noteData + '-' + FlxG.random.int(0, 1), true);
+		
+		updateHitbox();
+		offset.set(width * 0.3, height * 0.3);
 	}
 	
 	override public function update(elapsed:Float)

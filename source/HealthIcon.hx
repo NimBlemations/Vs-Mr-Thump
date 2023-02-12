@@ -27,9 +27,9 @@ class HealthIcon extends FlxSprite
 		super();
 		try
 		{
-			if (FileSystem.exists(Paths.getPath('images/icons/icon-' + characterTxt + '.png', IMAGE, null)))
+			if (FileSystem.exists(Paths.file('images/icons/icon-' + characterTxt + '.png', IMAGE, null)))
 				loadGraphic(Paths.image('icons/icon-' + characterTxt), true, 150, 150);
-			else if (FileSystem.exists(Paths.getPath('images/icons/icon-' + split + '.png', IMAGE, null)))
+			else if (FileSystem.exists(Paths.file('images/icons/icon-' + split + '.png', IMAGE, null)))
 				loadGraphic(Paths.image('icons/icon-' + split), true, 150, 150);
 			else
 				loadGraphic(Paths.image('icons/icon-face'), true, 150, 150);

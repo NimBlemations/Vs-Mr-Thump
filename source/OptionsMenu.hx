@@ -77,7 +77,10 @@ class OptionsMenu extends MusicBeatState
 		super.update(elapsed);
 
 			if (controls.BACK)
-				Main.switchState(new MainMenuState());
+			{
+				FlxG.save.flush();
+				FlxG.switchState(new MainMenuState());
+			}
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)
@@ -139,7 +142,7 @@ class OptionsMenu extends MusicBeatState
 						grpControls.add(ctrl);
 					case 5:
 						trace('switch');
-						Main.switchState(new LoadReplayState());
+						FlxG.switchState(new LoadReplayState());
 				}
 			}
 	}

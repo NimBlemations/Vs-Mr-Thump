@@ -17,7 +17,7 @@ class Main extends Sprite
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
 	public static var mainClassState:Class<FlxState> = TitleState; // Main FlxState of the game.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
-	var framerate:Int = 120; // How many frames per second the game should run at.
+	var framerate:Int = #if desktop 120 #else 60 #end ; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 
@@ -75,24 +75,10 @@ class Main extends Sprite
 		framerate = 60;
 		#end
 
-		addChild(new FlxGame(gameWidth, gameHeight, mainClassState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		addChild(new FlxGame(gameWidth, gameHeight, mainClassState, #if (flixel < "5.0.0") zoom, #end framerate, framerate, skipSplash, startFullscreen));
 
 		#if !mobile
 		addChild(new FPS(10, 3, 0xFFFFFF));
 		#end
-	}
-	
-	public static function switchState(target:FlxState)
-	{
-		// Custom made Trans in
-		mainClassState = Type.getClass(target);
-		if (!FlxTransitionableState.skipNextTransIn)
-		{
-			FlxG.switchState(target);
-			return trace('changed state');
-		}
-		FlxTransitionableState.skipNextTransIn = false;
-		// load the state
-		FlxG.switchState(target);
 	}
 }

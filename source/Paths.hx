@@ -1,16 +1,10 @@
 package;
 
-import flash.geom.Rectangle;
+// With the conditionals, I just want to not leave ANYTHING unnecessary behind on compile, but the flags are getting ridiculous, I know.
+
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.graphics.frames.FlxFrame;
-import flixel.graphics.frames.FlxFrame.FlxFrameAngle;
-import flixel.graphics.frames.FlxFramesCollection;
-import flixel.graphics.frames.FlxFramesCollection.FlxFrameCollectionType;
-import flixel.math.FlxPoint;
-import flixel.math.FlxRect;
-import haxe.xml.Access;
 import lime.utils.Assets;
 import openfl.display3D.textures.Texture;
 import openfl.display.BitmapData;
@@ -60,15 +54,31 @@ class Paths
 				@:privateAccess
 				if (obj != null)
 				{
-					openfl.Assets.cache.removeBitmapData(key);
-					FlxG.bitmap._cache.remove(key);
+					if (currentTrackedTextures.exists(key)) // If Stage3D texture
+					{
+						var texture = currentTrackedTextures.get(key);
+						texture.dispose();
+						texture = null;
+						currentTrackedTextures.remove(key);
+						#if debug
+						trace('ungpu\'d, biatch');
+						#end
+					}
+					else
+					{
+						openfl.Assets.cache.removeBitmapData(key);
+						FlxG.bitmap._cache.remove(key);
+					}
 					obj.destroy();
 					currentTrackedAssets.remove(key);
 				}
 			}
 			counter++;
 		}
-		trace('removed $counter assets');
+		if (counter == 1)
+			trace('removed $counter asset'); // detail lmao
+		else
+			trace('removed $counter assets');
 		// run the garbage collector for good measure lmfao
 		System.gc();
 	}
@@ -104,7 +114,7 @@ class Paths
 		openfl.Assets.cache.clear("songs");
 	}
 	
-	public static function returnGraphic(key:String, ?library:String)
+	public static function returnGraphic(key:String, ?library:String, ?textureCompression:Bool = false)
 	{
 		var path = getPath('images/$key.png', IMAGE, library);
 		// trace(path);
@@ -114,8 +124,44 @@ class Paths
 			{
 				if (!currentTrackedAssets.exists(path))
 				{
-					var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
+					var newGraphic:FlxGraphic = null;
+					if (textureCompression)
+					{
+						var bitmap:BitmapData = OpenFlAssets.getBitmapData(path);
+						var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, true, 0);
+						texture.uploadFromBitmapData(bitmap);
+						currentTrackedTextures.set(path, texture);
+						bitmap.dispose();
+						bitmap.disposeImage();
+						bitmap = null;
+						newGraphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key, false);
+					}
+					else
+						newGraphic = FlxG.bitmap.add(path, false, path);
 					newGraphic.persist = true;
+					//////////////////////////
+					// XML CHECKING!!!
+					var xmlPath = getPath('images/$key.xml', TEXT, library);
+					if (OpenFlAssets.exists(xmlPath))
+					{
+						#if debug
+						trace(xmlPath);
+						#end
+						var atlasFrames:FlxAtlasFrames = FlxAtlasFrames.fromSparrow(newGraphic, xmlPath);
+						if (atlasFrames != null)
+						#if debug
+						{
+							trace('loaded xml woop woop!');
+							#end
+							newGraphic.addFrameCollection(atlasFrames);
+							#if debug
+						}
+						else
+							trace('augh, didn\'t work');
+						#end
+					}
+					// Alright, done xml checking
+					//////////////////////////
 					currentTrackedAssets.set(path, newGraphic);
 				}
 			}
@@ -152,7 +198,7 @@ class Paths
 		// trace(gottenPath);
 		if (!currentTrackedSounds.exists(gottenPath))
 		{
-			trace('preloading $key');
+			trace('preloading sound $key');
 			var folder:String = '';
 			if (path == 'songs')
 				folder = 'songs:';
@@ -161,7 +207,7 @@ class Paths
 		}
 	}
 	
-	public static function preloadGraphic(key:String, ?library:String, ?packXml:Bool = false)
+	public static function preloadGraphic(key:String, ?library:String, ?textureCompression:Bool = false)
 	{
 		var path = getPath('images/$key.png', IMAGE, library);
 		if (OpenFlAssets.exists(path, IMAGE))
@@ -170,77 +216,55 @@ class Paths
 			{
 				if (!currentTrackedAssets.exists(path))
 				{
-					trace('preloading $key');
-					var newGraphic:FlxGraphic = FlxG.bitmap.add(path, false, path);
-					newGraphic.persist = true;
-					currentTrackedAssets.set(path, newGraphic);
-					if (packXml) // This shit is fuckin' broken, don't know what's going wrong and I am too unbothered to persue
+					trace('preloading graphic $key');
+					var newGraphic:FlxGraphic = null;
+					if (textureCompression)
 					{
-						var xmlPath = getPath('images/$key.xml', TEXT, library);
+						var bitmap:BitmapData = OpenFlAssets.getBitmapData(path);
+						var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, true, 0);
+						texture.uploadFromBitmapData(bitmap);
+						currentTrackedTextures.set(path, texture);
+						bitmap.dispose();
+						bitmap.disposeImage();
+						bitmap = null;
+						newGraphic = FlxGraphic.fromBitmapData(BitmapData.fromTexture(texture), false, key, false);
+					}
+					else
+						newGraphic = FlxG.bitmap.add(path, false, path);
+					newGraphic.persist = true;
+					//////////////////////////
+					// XML CHECKING!!!
+					var xmlPath = getPath('images/$key.xml', TEXT, library);
+					if (OpenFlAssets.exists(xmlPath))
+					{
 						#if debug
 						trace(xmlPath);
 						#end
-						if (OpenFlAssets.exists(xmlPath))
+						var atlasFrames:FlxAtlasFrames = FlxAtlasFrames.fromSparrow(newGraphic, xmlPath);
+						if (atlasFrames != null)
+						#if debug
 						{
-							if (key.endsWith('s'))
-								trace('preloading ${key}\' xml');
-							else
-								trace('preloading ${key}\'s xml');
-							var xmlText = OpenFlAssets.getText(xmlPath);
-							var frameArray:Array<FlxFrame> = [];
-							var xmlAccess:Access = new Access(Xml.parse(xmlText).firstElement());
-							
-							@:privateAccess
-							for (texture in xmlAccess.nodes.SubTexture) // For all of this, go to https://github.com/HaxeFlixel/flixel/blob/master/flixel/graphics/frames/FlxAtlasFrames.hx
-							{
-								var name = texture.att.name;
-								var trimmed = texture.has.frameX;
-								var rotated = (texture.has.rotated && texture.att.rotated == "true");
-								var flipX = (texture.has.flipX && texture.att.flipX == "true");
-								var flipY = (texture.has.flipY && texture.att.flipY == "true");
-								
-								var rect = FlxRect.get(Std.parseFloat(texture.att.x), Std.parseFloat(texture.att.y), Std.parseFloat(texture.att.width), 
-									Std.parseFloat(texture.att.height));
-								
-								var size = if (trimmed)
-								{
-									new Rectangle(Std.parseInt(texture.att.frameX), Std.parseInt(texture.att.frameY), Std.parseInt(texture.att.frameWidth),
-										Std.parseInt(texture.att.frameHeight));
-								}
-								else
-								{
-									new Rectangle(0, 0, rect.width, rect.height);
-								}
-								
-								var angle = rotated ? FlxFrameAngle.ANGLE_NEG_90 : FlxFrameAngle.ANGLE_0;
-								
-								var offset = FlxPoint.get( -size.left, -size.top);
-								var sourceSize = FlxPoint.get(size.width, size.height);
-								
-								if (rotated && !trimmed)
-									sourceSize.set(size.height, size.width);
-								
-								var xmlFrame:FlxFrame = new FlxFrame(newGraphic, angle, flipX, flipY);
-								
-								xmlFrame.frame = rect;
-								xmlFrame.name = name;
-								
-								frameArray.push(xmlFrame);
-							}
-							
-							var xmlCollection:FlxFramesCollection = new FlxFramesCollection(newGraphic, FlxFrameCollectionType.ATLAS);
-							
-							newGraphic.addFrameCollection(xmlCollection); // Fuckin' wild ride that was...
+							trace('preloaded xml woop woop!');
+							#end
+							newGraphic.addFrameCollection(atlasFrames);
+							#if debug
 						}
+						else
+							trace('augh, didn\'t work');
+						#end
 					}
+					// Alright, done xml checking
+					//////////////////////////
+					currentTrackedAssets.set(path, newGraphic);
 				}
 			}
+			localTrackedAssets.push(path);
 		}
 		else
 			trace('oh no $key is null NOOOO');
 	}
 	
-	static public function getPath(file:String, type:AssetType, library:Null<String>)
+	static function getPath(file:String, type:AssetType, library:Null<String>)
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
@@ -297,8 +321,13 @@ class Paths
 	{
 		return getPath('data/$key.json', TEXT, library);
 	}
+	
+	inline static public function chart(key:String, ?library:String)
+	{
+		return getPath('data/$key.chart', TEXT, library);
+	}
 
-	static public function sound(key:String, ?library:String) #if MEMORY_OPTIMIZATION :Sound #end
+	static public function sound(key:String, ?library:String):Sound
 	{
 		var sound:Sound = returnSound('sounds', key, library);
 		return sound;
@@ -309,7 +338,7 @@ class Paths
 		return sound(key + FlxG.random.int(min, max), library);
 	}
 
-	inline static public function music(key:String, ?library:String) #if MEMORY_OPTIMIZATION :Sound #end
+	inline static public function music(key:String, ?library:String):Sound
 	{
 		var file:Sound = returnSound('music', key, library);
 		return file;
@@ -329,9 +358,9 @@ class Paths
 		return inst;
 	}
 
-	inline static public function image(key:String, ?library:String) #if MEMORY_OPTIMIZATION :FlxGraphic #end
+	inline static public function image(key:String, ?library:String, ?textureCompression:Bool = false):FlxGraphic
 	{
-		var returnAsset:FlxGraphic = returnGraphic(key, library);
+		var returnAsset:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return returnAsset;
 	}
 
@@ -345,9 +374,9 @@ class Paths
 		return getPath('music/$key.mp4', TEXT, library);
 	}
 
-	inline static public function getSparrowAtlas(key:String, ?library:String)
+	inline static public function getSparrowAtlas(key:String, ?library:String, ?textureCompression:Bool = false)
 	{
-		var graphic:FlxGraphic = returnGraphic(key, library);
+		var graphic:FlxGraphic = returnGraphic(key, library, textureCompression);
 		return FlxAtlasFrames.fromSparrow(graphic, file('images/$key.xml', library));
 	}
 
