@@ -1770,13 +1770,9 @@ class PlayState extends MusicBeatState
 							daNote.destroy();
 						}
 						
-						if (daNote.mustPress && !daNote.wasGoodHit && (daNote.isBotNote || botPlay)) {
-							var noteDiff:Float = Math.abs(daNote.strumTime - Conductor.songPosition);
-							if (noteDiff < Conductor.safeZoneOffset * 0.25)
-							{
-								// absolute banger
-								goodNoteHit(daNote);
-							}
+						if (daNote.mustPress && daNote.strumTime <= Conductor.songPosition && !daNote.wasGoodHit && botPlay) // Vs Walter White solution (mod I gave up on)
+						{
+							goodNoteHit(daNote);
 						}
 						
 						var lazyScroll:Float = SONG.speed * scrollInterchangableMultiplier; // bruh
@@ -2380,7 +2376,7 @@ class PlayState extends MusicBeatState
 			}
 			
 			
-			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left && !botPlay && !SONG.notes[Math.floor(curStep /16)].playerNotes)
+			if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !up && !down && !right && !left && !SONG.notes[Math.floor(curStep /16)].playerNotes)
 			{
 				if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 				{
@@ -2780,7 +2776,7 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.notes[Math.floor(curStep / 16)] != null)
 		{
-			if (!boyfriend.animation.curAnim.name.startsWith("sing") && !botPlay && !SONG.notes[Math.floor(curStep /16)].playerNotes)
+			if (!boyfriend.animation.curAnim.name.startsWith("sing") && !SONG.notes[Math.floor(curStep /16)].playerNotes)
 			{
 				boyfriend.playAnim('idle');
 			}
