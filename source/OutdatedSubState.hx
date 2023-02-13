@@ -42,27 +42,28 @@ class OutdatedSubState extends MusicBeatState
 		}
 		if (controls.BACK)
 		{
-			var randomNumeral:Int = Std.random(6);
-			var txtInsert:String = '';
 			// This is a weird spot lmao
-			switch (randomNumeral)
-			{
-				case 0:
-					txtInsert = 'BEES! OH GOD THE BEES!';
-				case 1:
-					txtInsert = 'Joe';
-				case 2:
-					txtInsert = "like i'm gonna change engines lmao";
-				case 3:
-					txtInsert = 'thump thump thump thump';
-				case 4:
-					txtInsert = 'hoodini';
-				case 5:
-					txtInsert = 'mcdonlad brugr';
-				case 6:
-					txtInsert = 'the are the when of';
-			}
-			var txt:FlxText = new FlxText(0, 0, FlxG.width, txtInsert, 32);
+			var randomizedSet:Array<String> = [
+				'BEES! OH GOD THE BEES!',
+				'Joe',
+				"like i'm gonna change engines lmao",
+				'thump thump thump thump',
+				'hoodini',
+				'mcdonlad brugr',
+				'the are the when of',
+				'that kinda flumped',
+				'annie are you ok',
+				"good engine, but i'll pass",
+				'you really know this is using an old engine',
+				'who does use 1.1.3 tho?',
+				'randomized text',
+				'randomzied text',
+				'two number 9',
+				'the hamburglar is in my closet'
+			];
+			var randomNumeral:Int = Std.random(randomizedSet.length - 1);
+			
+			var txt:FlxText = new FlxText(0, 0, FlxG.width, randomizedSet[randomNumeral], 32);
 			txt.setFormat("VCR OSD Mono", 32, FlxColor.GREEN, CENTER);
 			txt.screenCenter();
 			add(txt);

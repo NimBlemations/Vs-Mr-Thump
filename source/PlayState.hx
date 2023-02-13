@@ -661,7 +661,7 @@ class PlayState extends MusicBeatState
 		
 		if (SONG.song.toLowerCase() == 'horde')
 		{
-			boyfriend.shader = new ShearShader(2.0);
+			// boyfriend.shader = new ShearShader(2.0);
 			
 			/*
 			var filters:Array<BitmapFilter> = []; // Might be unnecessary
@@ -1451,6 +1451,8 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
+			songMusic.stop();
+			endingSong = true;
 			FlxG.switchState(new ChartingState());
 		}
 
@@ -1770,7 +1772,7 @@ class PlayState extends MusicBeatState
 							daNote.destroy();
 						}
 						
-						if (daNote.mustPress && daNote.strumTime <= Conductor.songPosition && !daNote.wasGoodHit && botPlay) // Vs Walter White solution (mod I gave up on)
+						if (daNote.mustPress && daNote.strumTime <= Conductor.songPosition && (!daNote.isSustainNote || daNote.isBotNote && daNote.canBeHit) && !daNote.wasGoodHit && (botPlay || daNote.isBotNote)) // Vs Walter White solution (mod I gave up on)
 						{
 							goodNoteHit(daNote);
 						}
@@ -2187,6 +2189,14 @@ class PlayState extends MusicBeatState
 			down = false;
 			right = false;
 			left = false;
+			upP = false;
+			downP = false;
+			rightP = false;
+			leftP = false;
+			upR = false;
+			downR = false;
+			rightR = false;
+			leftR = false;
 		}
 		else if (!loadRep) // record replay code
 		{
@@ -2349,7 +2359,7 @@ class PlayState extends MusicBeatState
 				}
 			}
 	
-			if ((up || right || down || left) && generatedMusic || (upHold || downHold || leftHold || rightHold) && loadRep && generatedMusic)
+			if ((up || right || down || left) && generatedMusic || botPlay && generatedMusic || (upHold || downHold || leftHold || rightHold) && loadRep && generatedMusic)
 			{
 				notes.forEachAlive(function(daNote:Note)
 				{
@@ -2359,16 +2369,16 @@ class PlayState extends MusicBeatState
 						{
 							// NOTES YOU ARE HOLDING
 							case 2:
-								if (up || upHold)
+								if (up || upHold || botPlay)
 									goodNoteHit(daNote);
 							case 3:
-								if (right || rightHold)
+								if (right || rightHold || botPlay)
 									goodNoteHit(daNote);
 							case 1:
-								if (down || downHold)
+								if (down || downHold || botPlay)
 									goodNoteHit(daNote);
 							case 0:
-								if (left || leftHold)
+								if (left || leftHold || botPlay)
 									goodNoteHit(daNote);
 						}
 					}
