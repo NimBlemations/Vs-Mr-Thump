@@ -33,6 +33,9 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+#if sys
+import sys.io.File;
+#end
 
 using StringTools;
 
@@ -214,6 +217,13 @@ class ChartingState extends MusicBeatState
 		{
 			loadJson(_song.song.toLowerCase());
 		});
+		
+		#if sys
+		var quickSaveButton:FlxButton = new FlxButton(saveButton.x, saveButton.y + 30, "Quick save (prevent crash?)", function()
+		{
+			quickSaveLevel();
+		});
+		#end
 
 		var loadAutosaveBtn:FlxButton = new FlxButton(reloadSongJson.x, reloadSongJson.y + 30, 'load autosave', loadAutosave);
 
@@ -247,6 +257,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(saveButton);
+		tab_group_song.add(quickSaveButton);
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
 		tab_group_song.add(loadAutosaveBtn);
@@ -364,7 +375,7 @@ class ChartingState extends MusicBeatState
 		FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
 
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
+		vocals = new FlxSound().loadEmbedded(_song.needsVoices ? Paths.voices(daSong) : null); // I hate this shit
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();
@@ -1075,6 +1086,22 @@ class ChartingState extends MusicBeatState
 			_file.save(data.trim(), _song.song.toLowerCase() + ".json");
 		}
 	}
+	
+	#if sys
+	private function quickSaveLevel()
+	{
+		var json = {
+			"song": _song
+		};
+		
+		var data:String = Json.stringify(json);
+
+		if ((data != null) && (data.length > 0))
+		{
+			File.saveContent('assets/' + _song.song.toLowerCase() + ".json", data);
+		}
+	}
+	#end
 
 	function onSaveComplete(_):Void
 	{

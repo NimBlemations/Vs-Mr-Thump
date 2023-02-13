@@ -737,6 +737,8 @@ class PlayState extends MusicBeatState
 		
 		strumLineSplashes = new FlxTypedGroup<FlxSprite>(); // bruh
 		add(strumLineSplashes); // bruh
+		
+		Paths.preloadGraphic('noteSplashes', null, true);
 
 		playerStrums = new FlxTypedGroup<FlxSprite>();
 
@@ -1014,6 +1016,36 @@ class PlayState extends MusicBeatState
 					altSuffix = '-pixel';
 				}
 			}
+			
+			Paths.preloadGraphic(introAlts[0]);
+			Paths.preloadGraphic(introAlts[1]);
+			Paths.preloadGraphic(introAlts[2]);
+			Paths.preloadGraphic('combo');
+			Paths.preloadSound('sounds', 'intro3' + altSuffix);
+			Paths.preloadSound('sounds', 'intro2' + altSuffix);
+			Paths.preloadSound('sounds', 'intro1' + altSuffix);
+			Paths.preloadSound('sounds', 'introGo' + altSuffix);
+			
+			for (i in 1...4)
+			{
+				Paths.preloadSound('sounds', 'missnote' + i);
+			}
+			for (i in 0...10)
+			{
+				Paths.preloadGraphic('num' + i);
+			}
+			if (curStage == 'spooky')
+			{
+				for (i in 1...3)
+				{
+					Paths.preloadSound('sounds', 'thunder_' + i);
+				}
+			}
+			
+			Paths.preloadGraphic('sick');
+			Paths.preloadGraphic('good');
+			Paths.preloadGraphic('bad');
+			Paths.preloadGraphic('shit');
 
 			switch (swagCounter)
 
