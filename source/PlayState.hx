@@ -663,14 +663,15 @@ class PlayState extends MusicBeatState
 		{
 			// boyfriend.shader = new ShearShader(2.0);
 			
-			/*
+			
 			var filters:Array<BitmapFilter> = []; // Might be unnecessary
 			
-			var filter = new ShaderFilter(new BrokenGlassShader());
+			var shader:NoTexNoiseShader = new NoTexNoiseShader(0.3, 20);
+			shader.randomize();
+			var filter = new ShaderFilter(shader);
 			filters.push(filter);
 			
 			FlxG.camera.setFilters(filters);
-			*/
 		}
 
 		// REPOSITIONING PER STAGE
@@ -2738,8 +2739,10 @@ class PlayState extends MusicBeatState
 		super.stepHit();
 		if (Math.abs((Conductor.songPosition - Conductor.offset) - songMusic.time) > 20
 			|| (SONG.needsVoices && Math.abs((Conductor.songPosition - Conductor.offset) - vocals.time) > 20))
+		{
 			resyncVocals();
-
+		}
+		
 		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)
 		{
 			// dad.dance();

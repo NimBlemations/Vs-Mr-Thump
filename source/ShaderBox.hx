@@ -123,6 +123,8 @@ class NegativeShader extends FlxShader
 		}
 }
 
+// Use FlxSkewedSprite instead
+/*
 class ShearShader extends FlxGraphicsShader
 {
 	@:glVertexSource('
@@ -148,6 +150,143 @@ class ShearShader extends FlxGraphicsShader
 				super();
 				this.shearAmount.value = [shearAmount];
 			}
+}
+*/
+
+class NoTexNoiseShader extends FlxShader
+{
+	@:glFragmentSource('
+		#pragma header
+		
+		uniform float mixPercent;
+		uniform float noiseMultiplier;
+		
+		uniform vec3 h1;
+		uniform vec3 h2;
+		uniform vec3 h3;
+		
+		vec3 hash(vec3 p) {
+			p = vec3(dot(p, vec3(127.1, 311.7, 74.7)),
+					 dot(p, vec3(269.5, 183.3, 246.1)),
+					 dot(p, vec3(113.5, 271.9, 124.6)));
+
+			return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+		}
+
+		float noise(vec3 p) {
+		  vec3 i = floor(p);
+		  vec3 f = fract(p);
+		  vec3 u = f * f * (3.0 - 2.0 * f);
+
+		  return mix(mix(mix(dot(hash(i + vec3(0.0, 0.0, 0.0)), f - vec3(0.0, 0.0, 0.0)),
+							 dot(hash(i + vec3(1.0, 0.0, 0.0)), f - vec3(1.0, 0.0, 0.0)), u.x),
+						 mix(dot(hash(i + vec3(0.0, 1.0, 0.0)), f - vec3(0.0, 1.0, 0.0)),
+							 dot(hash(i + vec3(1.0, 1.0, 0.0)), f - vec3(1.0, 1.0, 0.0)), u.x), u.y),
+					 mix(mix(dot(hash(i + vec3(0.0, 0.0, 1.0)), f - vec3(0.0, 0.0, 1.0)),
+							 dot(hash(i + vec3(1.0, 0.0, 1.0)), f - vec3(1.0, 0.0, 1.0)), u.x),
+						 mix(dot(hash(i + vec3(0.0, 1.0, 1.0)), f - vec3(0.0, 1.0, 1.0)),
+							 dot(hash(i + vec3(1.0, 1.0, 1.0)), f - vec3(1.0, 1.0, 1.0)), u.x), u.y), u.z );
+		}
+		
+		/*
+		// https://www.geeksforgeeks.org/square-root-of-a-number-without-using-sqrt-function/
+		float sqrt(float x) {
+			// for 0 and 1, the square roots are themselves
+			if (x < 2)
+				return x;
+		 
+			// considering the equation values
+			float y = x;
+			float z = (y + (x / y)) / 2;
+		 
+			// as we want to get upto 5 decimal digits, the absolute
+			// difference should not exceed 0.00001
+			while (abs(y - z) >= 0.00001) {
+				y = z;
+				z = (y + (x / y)) / 2;
+			}
+			return z;
+		}
+		
+		
+		float normalize(vec3 vektor) {
+			sqrt(x ^ 2 + y ^ 2 + z ^ 2);
+		}
+		*/
+		
+		float lerp(float a, float b, float t) {
+			return a + (b - a) * t;
+		}
+		
+		void main() {
+			vec4 curColor = vec4(0.0, 0.0, 0.0, 1.0);
+			curColor.rgb = vec3(sin(openfl_TextureCoordv.x * 3.14159 * 4.0) * cos(openfl_TextureCoordv.y * 3.14159 * 4.0) * 0.5 + 0.5);
+			vec4 imgColor = flixel_texture2D(bitmap, openfl_TextureCoordv);
+			
+			float theta = openfl_TextureCoordv.y * 3.14159;
+			float phi = openfl_TextureCoordv.x * 3.14159 * 2.0;
+			vec3 unit = vec3(0.0, 0.0, 0.0);
+
+			unit.x = sin(phi) * sin(theta);
+			unit.y = cos(theta) * -1.0;
+			unit.z = cos(phi) * sin(theta);
+			unit = normalize(unit);
+			
+			float n = noise(unit * noiseMultiplier);
+			curColor.rgb = vec3(n * 0.5 + 0.5);
+			
+			vec4 finalColor = imgColor;
+			
+			finalColor.r = lerp(finalColor.r, curColor.r, mixPercent);
+			finalColor.g = lerp(finalColor.g, curColor.g, mixPercent);
+			finalColor.b = lerp(finalColor.b, curColor.b, mixPercent);
+			finalColor.a = lerp(finalColor.a, curColor.a, mixPercent);
+			
+			gl_FragColor = finalColor;
+		}')
+		
+		public var sh_mixPercent(default, set):Float = 0.5;
+		public var sh_noiseMultiplier(default, set):Float = 5;
+		
+		function set_sh_mixPercent(newMixPercent:Float = 0.5)
+		{
+			var newPercent:Float = Math.max(Math.min(newMixPercent, 1), 0);
+			this.mixPercent.value = [newPercent];
+			return sh_mixPercent = newPercent;
+		}
+		
+		function set_sh_noiseMultiplier(noiseMult:Float = 5)
+		{
+			this.noiseMultiplier.value = [noiseMult];
+			return sh_noiseMultiplier = noiseMult;
+		}
+		
+		public function randomize()
+		{
+			var stackMan:Array<Float> = [];
+			for (i in 0...9)
+			{
+				var rand1:Int = Std.random(300);
+				var rand2:Int = Std.random(10);
+				
+				var finalNum:Float = rand1 + (rand2 / 10);
+				stackMan.push(finalNum);
+			}
+			this.h1.value = [stackMan[0], stackMan[1], stackMan[2]];
+			this.h2.value = [stackMan[3], stackMan[4], stackMan[5]];
+			this.h3.value = [stackMan[6], stackMan[7], stackMan[8]];
+		}
+		
+		public function new(?mixPercent:Float = 0.5, ?noiseMultiplier:Float = 5)
+		{
+			super();
+			this.sh_mixPercent = mixPercent;
+			this.sh_noiseMultiplier = noiseMultiplier;
+			
+			this.h1.value = [127.1, 311.7, 74.7];
+			this.h2.value = [269.5, 183.3, 246.1];
+			this.h3.value = [113.5, 271.9, 124.6];
+		}
 }
 
 class BrokenGlassShader extends FlxShader
