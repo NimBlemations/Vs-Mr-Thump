@@ -257,7 +257,9 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(check_voices);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(saveButton);
+		#if sys
 		tab_group_song.add(quickSaveButton);
+		#end
 		tab_group_song.add(reloadSong);
 		tab_group_song.add(reloadSongJson);
 		tab_group_song.add(loadAutosaveBtn);

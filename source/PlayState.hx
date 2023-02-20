@@ -132,6 +132,8 @@ class PlayState extends MusicBeatState
 
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
+	
+	var noiseShader:NoTexNoiseShader = new NoTexNoiseShader(0.2, 10);
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
@@ -666,9 +668,8 @@ class PlayState extends MusicBeatState
 			
 			var filters:Array<BitmapFilter> = []; // Might be unnecessary
 			
-			var shader:NoTexNoiseShader = new NoTexNoiseShader(0.3, 20);
-			shader.randomize();
-			var filter = new ShaderFilter(shader);
+			noiseShader.randomize();
+			var filter = new ShaderFilter(noiseShader);
 			filters.push(filter);
 			
 			FlxG.camera.setFilters(filters);
@@ -2743,9 +2744,9 @@ class PlayState extends MusicBeatState
 			resyncVocals();
 		}
 		
-		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)
+		if (SONG.song.toLowerCase() == 'horde')
 		{
-			// dad.dance();
+			noiseShader.randomize();
 		}
 	}
 

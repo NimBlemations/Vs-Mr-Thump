@@ -166,9 +166,9 @@ class NoTexNoiseShader extends FlxShader
 		uniform vec3 h3;
 		
 		vec3 hash(vec3 p) {
-			p = vec3(dot(p, vec3(127.1, 311.7, 74.7)),
-					 dot(p, vec3(269.5, 183.3, 246.1)),
-					 dot(p, vec3(113.5, 271.9, 124.6)));
+					p = vec3(dot(p, h1),
+						dot(p, h2),
+						dot(p, h3));
 
 			return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
 		}
@@ -275,6 +275,7 @@ class NoTexNoiseShader extends FlxShader
 			this.h1.value = [stackMan[0], stackMan[1], stackMan[2]];
 			this.h2.value = [stackMan[3], stackMan[4], stackMan[5]];
 			this.h3.value = [stackMan[6], stackMan[7], stackMan[8]];
+			// trace('${this.h1.value}, ${this.h2.value}, ${this.h3.value}');
 		}
 		
 		public function new(?mixPercent:Float = 0.5, ?noiseMultiplier:Float = 5)

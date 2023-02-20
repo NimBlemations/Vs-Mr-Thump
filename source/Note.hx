@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 import polymod.format.ParseRules.TargetSignatureElement;
 #end
 import ShaderBox;
+import ExtraTypes;
 
 using StringTools;
 
@@ -16,7 +17,7 @@ class Note extends FlxSprite
 	public var strumTime:Float = 0;
 
 	public var mustPress:Bool = false;
-	public var noteData:Int = 0;
+	public var noteData:EBInt = 0; // Eight bits
 	public var canBeHit:Bool = false;
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
